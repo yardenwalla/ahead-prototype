@@ -90,20 +90,18 @@
   // Nov 27 (Yarden's nursing mockup): nursing leads with the latch, the hardest part early on; then the rest of a feed
   // in three stages, holds and burps with one line each, two short notes and the video.
   const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
-  const nbNurse = () => { const T = H().TPLB;
-    // Nov 27 (Yarden: the drawing was "cringe and distracting"; a photo can't show a latch tastefully): three numbered
-    // steps, then what to look for, and the latch video right here so "see" opens a real demonstration.
-    const latch = `<section class="fd-latch"><ol>${[['Nose near nipple', 'Line {o} up, tummy to tummy.'], ['Wait for a wide mouth', 'Like a big yawn.'], ['Bring {o} close, chin first', 'Bring {o} to you, not you to {o}.']].map(([t, x], k) => `<li><i>${k + 1}</i><span><b>${F(t)}</b><small>${F(x)}</small></span></li>`).join('')}</ol><div class="fd-latch-look"><b>${F('What you’re looking for')}</b><span>${F('{P} mouth is open wide, {p} lips are turned out, and {p} chin is against your breast.')}</span></div></section>`;
-    const tug = `<div class="fd-tug"><span>${CHECK}</span><div><b>${F('It should feel like a tug, not a pinch.')}</b><small>${F('If it hurts, gently break the seal with a clean finger and try again.')}</small></div></div>`;
-    const cols = `<ol class="fd-cols">${[['Before', 'Rooting or hands to mouth mean {s} may be hungry.'], ['During', 'Listen for swallows. Pause, burp or switch sides as {s} {slow|slows}.'], ['When {s’s} done', '{S} {turn|turns} away, {slow|slows} down or {relax|relaxes} {p} hands.']].map(([t, x], i) => `<li><i>${i + 1}</i><b>${F(t)}</b><span>${F(x)}</span></li>`).join('')}</ol>`;
-    const note = (tone, t, x) => `<section class="fd-note is-${tone}"><b>${F(t)}</b><p>${F(x)}</p></section>`;
-    return page(head('heart', 'Newborn · First 6 weeks', 'A feed, start to finish', 'Find a comfortable latch, follow {p} cues, and let {o} decide when {s’s} done.'),
-      sect('First, a comfortable latch', '', latch) + watch('', 'Watch: A good latch', 'See the whole technique, step by step.', 'https://www.youtube.com/watch?v=y--syZR0u1E') + tug
-      + sect('How the rest of a feed goes', '', cols)
-      + sect('Holds to try', 'Choose a position that keeps {o} close and supported.', '<div class="fd-two">' + T.photoGrid([['feeding/hold-crosscradle', 'Cross-cradle', 'Guide {p} head toward the breast.'], ['feeding/hold-cradle2', 'Cradle', '{P} head rests in your elbow.'], ['feeding/hold-laidback2', 'Laid-back', 'Recline and support {p} body.'], ['feeding/hold-sidelying', 'Side-lying', 'Both on your sides, facing.']]) + '</div>')
-      + sect('Ways to burp', '', T.photoGrid([['feeding/burp-shoulder', 'Over shoulder', 'Chin on a cloth'], ['feeding/burp-sitting', 'Sitting on lap', 'Support {p} chin'], ['feeding/burp-tummy', 'Tummy-down', 'Across your lap']]) + `<p class="fd-g-lead fd-after">${F('Try a gentle pat or rub. If {s} {doesn’t|doesn’t} burp after a minute or two, that’s okay.')}</p>`)
-      + note('plain', 'Good to know', 'Start the next feed on the side {s} finished on last. Some spit-up and hiccups are common.')
-      + note('pink', 'If it’s not going smoothly', 'If most feeds still hurt, or {s} can’t stay latched, a lactation consultant can help.')); };
+  // Nov 27 (Yarden's compact wireframe): the latch as one card (video, three steps, how it should feel), the rest of a
+  // feed in one row, holds and burps as photo strips with names only, and one note.
+  const nbNurse = () => {
+    const vid = `<a class="fd-vid" href="https://www.youtube.com/watch?v=y--syZR0u1E" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg></i><b>${F('See a good latch up close')}</b><small>${F('A short video')}</small></a>`;
+    const three = (xs, num) => `<ol class="fd-three${num ? ' is-num' : ''}">${xs.map(([t, x], k) => `<li>${num ? `<i>${k + 1}</i>` : ''}<b>${F(t)}</b><span>${F(x)}</span></li>`).join('')}</ol>`;
+    const latch = `<section class="fd-card">${vid}${three([['Nose near nipple', 'Tummy to tummy.'], ['Wait for a wide mouth', 'Like a big yawn.'], ['Bring {o} close', 'Chin first, to you.']], true)}<div class="fd-feel"><span>${CHECK}</span><div><b>${F('You’ll feel a tug, not a pinch.')}</b><small>${F('{P} lips are turned out, chin against your breast.')}</small></div></div></section>`;
+    const rest = `<section class="fd-card">${three([['Before', 'Rooting or hands to mouth.'], ['During', 'Listen for swallows. Pause or switch sides.'], ['When {s’s} done', '{S} {turn|turns} away or {relax|relaxes}.']])}</section>`;
+    return page(head('heart', 'Newborn · First 6 weeks', 'A feed, start to finish', 'Get comfortable, follow {p} cues, and know when {s’s} done.'),
+      sect('First, get a comfortable latch', '', latch) + sect('The rest of a feed', '', rest)
+      + sect('Holds to try', '', `<section class="fd-card is-pad">${strip([['hold-crosscradle', 'Cross-cradle'], ['hold-cradle2', 'Cradle'], ['hold-laidback2', 'Laid-back'], ['hold-sidelying', 'Side-lying']])}</section>`)
+      + sect('Ways to burp', '', `<section class="fd-card is-pad">${strip([['burp-shoulder', 'Over your shoulder'], ['burp-sitting', 'Sitting on your lap'], ['burp-tummy', 'Tummy-down']])}</section>`)
+      + `<section class="fd-note is-pink"><b>${F('If it’s not going smoothly')}</b><p>${F('Pinching? Break the seal with a clean finger and try again. If most feeds still hurt or {s} can’t latch, a lactation consultant can help.')}</p></section>`); };
   const nbFeed = () => { if (window.__fdx && window.__fdx.nurses && window.__fdx.nurses()) return nbNurse();
  const X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true;
     const top = head(nurse ? 'heart' : 'bottle', 'Newborn · First 6 weeks', 'A feed, start to finish', nurse ? 'Follow {p} cues, take breaks, and know when {s’s} done.' : 'Follow {p} cues, pace the feed, and know when {s’s} done.');

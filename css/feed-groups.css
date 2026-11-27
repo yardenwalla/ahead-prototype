@@ -148,3 +148,23 @@
 #main .fd-group .fd-latch-look b{display:block;font-size:14px;color:#2b2733;margin-bottom:2px}
 #main .fd-group .fd-latch-look span{font-size:13.5px;line-height:1.45;color:#5e5a66}
 #main .fd-group .fd-latch + .fd-watch{margin:0 0 12px}
+/* Nov 27: compact nursing page */
+#main .fd-group .fd-card{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:12px;margin:0 0 24px}
+#main .fd-group .fd-card.is-pad{padding:12px 12px 2px}
+#main .fd-group .fd-card .fd-strip{margin:0 0 10px}
+#main .fd-group .fd-vid{display:grid;justify-items:center;gap:2px;padding:26px 12px;border-radius:14px;background:#fbe4ec;text-decoration:none;color:#2b2733;margin-bottom:12px}
+#main .fd-group .fd-vid i{width:44px;height:44px;border-radius:50%;background:#fff;color:#9b4766;display:grid;place-items:center;margin-bottom:6px;box-shadow:0 2px 8px rgba(155,71,102,.18)}
+#main .fd-group .fd-vid b{font-size:15px}
+#main .fd-group .fd-vid small{font-size:12.5px;color:#5e5a66}
+#main .fd-group .fd-three{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr)}
+#main .fd-group .fd-three li{padding:4px 8px 6px;min-width:0}
+#main .fd-group .fd-three li+li{border-left:1px solid #ece7e2}
+#main .fd-group .fd-three i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#fbe4ec;color:#9b4766;font-style:normal;font-size:13px;font-weight:700;margin-bottom:8px}
+#main .fd-group .fd-three b{display:block;font-size:14px;line-height:1.25;color:#2b2733;margin-bottom:3px}
+#main .fd-group .fd-three span{display:block;font-size:12.5px;line-height:1.4;color:#5e5a66}
+#main .fd-group .fd-feel{display:flex;gap:10px;align-items:center;margin-top:12px;padding:12px;border-radius:14px;background:#fdf1f5;border:1px solid #f6dbe5}
+#main .fd-group .fd-feel>span{flex:none;width:28px;height:28px;border-radius:50%;background:#fbe4ec;color:#9b4766;display:grid;place-items:center;padding:6px;box-sizing:border-box}
+#main .fd-group .fd-feel>span svg{width:100%;height:100%}
+#main .fd-group .fd-feel b{display:block;font-size:14.5px;color:#9b4766}
+#main .fd-group .fd-feel small{display:block;font-size:13px;line-height:1.4;color:#5e5a66;margin-top:2px}
+#main .fd-group .fd-card .fd-strip figure:first-child:nth-last-child(4) ~ figure figcaption, #main .fd-group .fd-card .fd-strip figure:first-child:nth-last-child(4) figcaption{font-size:12.5px;white-space:nowrap}
