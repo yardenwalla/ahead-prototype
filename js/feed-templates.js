@@ -356,7 +356,7 @@
     z_gag: () => { const T = H().TPLB;
       // Nov 19 (review): no photo of choking (a baby clutching the neck isn't how babies show it), and no "silent":
       // a choking baby may make no sound, or only a weak cough or high-pitched noise (MedlinePlus, Nationwide Children's).
-      return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking isn’t.',
+      return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is common. Choking isn’t.',
         why: 'Gagging is how {s} {learn|learns} to eat. Loud coughing means air is getting through.',
         tellTitle: 'How to tell them apart', figure: () => T.versus(['Gagging: stay close', 'Loud coughing or gagging, red face, watery eyes. Let {o} work it out.'], ['Choking: act now', 'Can’t cry or cough, or only a weak cough or high-pitched sound. Lips may turn blue.']),
         // Nov 24 (Yarden): a photo for every step, in Everyday care's step card. Holds per the 2025 AHA/AAP guidelines.

@@ -221,9 +221,14 @@
         sect('What changes, and when', '', stageTiles([['vitd-drop', 'Before solids', 'pink', 'Ask about iron drops', 'Often from about 4 months. Timing and amount depend on {p} feeding and birth history.'], ['iron-meat', 'With first foods', 'green', 'Offer iron-rich foods', 'Iron-fortified cereal, soft meat or mashed beans.']]))
         + callout('Ask about {p} iron needs now', 'Especially if {s} arrived early. {P} pediatrician can tell you whether to give drops, how much, and when to stop.')
         + sect('Good to know', '', rowsCard([['drop', 'Keep up the drops', 'Even as foods start, until {p} pediatrician says to stop.'], fam && ['bottle', 'Also on formula?', 'Iron-fortified formula may already cover {p} needs. Ask if you’re unsure.'], ['diaper', 'Darker poop?', 'Iron can cause it. That’s common.']].filter(Boolean))), 'expect'); },
-    z_plan: () => withPage('z_plan', root => { asGroup(root); const h = [...root.querySelectorAll('h2')].find(x => /differently/.test(x.textContent)); if (!h) return;
-      const fig = h.nextElementSibling; let n = fig && fig.nextElementSibling; while (n && !n.matches('h2')) { const nx = n.nextElementSibling; n.remove(); n = nx; }
-      fig.insertAdjacentHTML('afterend', checkCard([['Grapes and cherry tomatoes', 'Quarter them lengthwise.'], ['Hot dogs and sausages', 'Never in rounds. Cut into thin strips.'], ['Nuts and nut butter', 'No whole nuts. Spread nut butter thin.'], ['Hard raw fruit and veg', 'Cook or grate until soft.']])); }),
+    // v2 (Yarden's mockup): two side-by-side cards, "Wait until age 1" and "Serve it safer until 4", then one callout.
+    z_plan: () => withPage('z_plan', root => { asGroup(root); const tpl = root.querySelector('.care-tpl'); if (!tpl) return;
+      tpl.innerHTML = `<div class="fd-wait">`
+        + `<section class="is-lav"><span class="fd-w-img"><img src="assets/feeding/no-honey.jpg" alt="" loading="lazy"></span><b>${F('Wait for now')}<em>${F('Until age 1')}</em></b><ul class="is-no">${[['Honey', 'Risk of botulism'], ['Cow’s milk to drink', 'Fine in cooking'], ['Juice', 'Milk is all {s} {need|needs}']].map(([t, x]) => `<li><span>${F(t)}</span><small>${F(x)}</small></li>`).join('')}</ul></section>`
+        + `<section class="is-sun"><span class="fd-w-img"><img src="assets/feeding/grape-q.jpg" alt="" loading="lazy"></span><b>${F('Serve it safer')}<em>${F('Until age 4')}</em></b><ul class="is-yes">${[['Grapes, cherry tomatoes', 'Quarter them lengthwise'], ['Hot dogs, sausages', 'Thin strips, never rounds'], ['Nuts', 'No whole nuts. Spread nut butter thin'], ['Hard raw fruit, veg', 'Cook or grate until soft']].map(([t, x]) => `<li><span>${F(t)}</span><small>${F(x)}</small></li>`).join('')}</ul></section></div>`
+        + callout('Keep it safe', 'Round, firm foods are the biggest choking risk. Change the shape, and they’re fine.'); }),
+    z_gag: () => withPage('z_gag', root => { asGroup(root);
+      root.querySelectorAll('.tpl-versus .is-ok > b, .tpl-versus .is-act > b').forEach(b => b.insertAdjacentHTML('afterbegin', `<span class="fd-vs-ic">${b.parentNode.classList.contains('is-ok') ? CHECK : '!'}</span>`)); }),
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',

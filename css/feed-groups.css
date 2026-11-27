@@ -257,3 +257,20 @@
 #main .hub-detail.care-v2.fd-group[data-ss] .ph-rowcard .hub-list > :nth-child(5n+3) .hub-dot{background:#fff3dc!important}
 #main .hub-detail.care-v2.fd-group[data-ss] .ph-rowcard .hub-list > :nth-child(5n+4) .hub-dot{background:#fdeee6!important}
 #main .hub-detail.care-v2.fd-group[data-ss] .ph-rowcard .hub-list > :nth-child(5n+5) .hub-dot{background:#fdeef2!important}
+#main .fd-group .fd-wait{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+#main .fd-group .fd-wait section{border-radius:20px;padding:10px 10px 14px}
+#main .fd-group .fd-wait .is-lav{background:#efedf8}#main .fd-group .fd-wait .is-sun{background:#fbf1df}
+#main .fd-group .fd-w-img{display:block;aspect-ratio:1/.75;border-radius:14px;overflow:hidden;margin-bottom:10px}
+#main .fd-group .fd-w-img img{width:100%;height:100%;object-fit:cover;display:block}
+#main .fd-group .fd-wait b{display:block;font-size:15.5px;color:#2b2733;margin:0 2px 8px}
+#main .fd-group .fd-wait ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+#main .fd-group .fd-wait li{position:relative;padding-left:22px}
+#main .fd-group .fd-wait li span{display:block;font-size:13.5px;font-weight:600;color:#2b2733;line-height:1.3}
+#main .fd-group .fd-wait li small{display:block;font-size:12.5px;color:#5e5a66;line-height:1.35;margin-top:1px}
+#main .fd-group .fd-wait li::before{position:absolute;left:0;top:0;width:16px;height:16px;border-radius:50%;font:700 10px/16px system-ui;text-align:center;color:#fff}
+#main .fd-group .fd-wait .is-no li::before{content:"✕";background:#c0485f}
+#main .fd-group .fd-wait .is-yes li::before{content:"✓";background:#3f7a55}
+#main .fd-group .fd-vs-ic{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#fff;margin-right:7px;vertical-align:-5px;font-weight:800;font-size:13px}
+#main .fd-group .fd-vs-ic svg{width:13px;height:13px}
+#main .fd-group .is-ok .fd-vs-ic{color:#3f7a55}#main .fd-group .is-act .fd-vs-ic{color:#c0485f}
+#main .fd-group .fd-wait b em{display:block;font-style:normal;font-size:12.5px;font-weight:600;color:#6b6676;margin-top:2px}
