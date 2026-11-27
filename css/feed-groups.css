@@ -274,3 +274,11 @@
 #main .fd-group .fd-vs-ic svg{width:13px;height:13px}
 #main .fd-group .is-ok .fd-vs-ic{color:#3f7a55}#main .fd-group .is-act .fd-vs-ic{color:#c0485f}
 #main .fd-group .fd-wait b em{display:block;font-style:normal;font-size:12.5px;font-weight:600;color:#6b6676;margin-top:2px}
+#main .fd-group .tpl-versus .fd-vs-ic{display:grid;width:30px;height:30px;margin:0 0 8px;font-size:16px}
+#main .fd-group .tpl-versus .fd-vs-ic svg{width:16px;height:16px}
+#main .fd-group .tpl-versus b{display:block;font-size:16px}
+#main .fd-group .tpl-versus em{display:block;font-style:normal;font-size:13px;font-weight:700;margin:2px 0 8px}
+#main .fd-group .tpl-versus .is-ok em{color:#3f7a55}#main .fd-group .tpl-versus .is-act em{color:#c0485f}
+#main .fd-group .tpl-versus ul{margin:0;padding-left:16px;font-size:13.5px;line-height:1.4;color:#3d3945}
+#main .fd-group .tpl-versus li+li{margin-top:4px}
+#main .fd-group .fd-wait li span{font-weight:600}
