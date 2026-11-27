@@ -48,18 +48,18 @@
     const call = [...root.querySelectorAll('h2')].find(h => h.textContent.trim() === 'When to call'); const frag = document.createElement('div');
     frag.innerHTML = `<h2 class="${r.cls}">${F('Once {s’ve} had them, keep them coming')}</h2>${r.html}`;
     [...frag.childNodes].forEach(n => call ? call.parentNode.insertBefore(n, call) : root.appendChild(n)); };
+  // Adds sections from another page before a page's When to call card (or at its end), keeping that page's look.
+  const addBefore = (root, html) => { const call = [...root.querySelectorAll('h2')].find(h => h.textContent.trim() === 'When to call'); const frag = document.createElement('div'); frag.innerHTML = html;
+    [...frag.childNodes].forEach(n => call ? call.parentNode.insertBefore(n, call) : (root.querySelector('.care-tpl') || root).appendChild(n)); };
+  const withPage = (id, add) => { const box = document.createElement('div'); box.innerHTML = window.changesRoute('chg:' + CAT + ':mock:' + id) || ''; const root = box.firstElementChild; if (!root) return ''; add(root); return box.innerHTML; };
   const G = {
-    // First foods, in the order it builds: a meal, then textures, finger foods, gagging, allergens and drinks.
-    g_first: start => seq('First foods, step by step', [['z_meal', 'A meal'], ['z_textures', 'Textures'], ['z_shapes', 'Finger food'], ['z_gag', 'Gagging'], ['z_allergens', 'Allergens', withRotation], ['z_milkfood', 'Drinks']],
-      'You’re all set for first foods', start, `openPage('chg:Feeding:mock:dirD:3')`),
-    // Milk feeds: hungrier days, then distracted feeds.
-    g_change: start => seq('How feeds are changing', [['m1_now', 'Hungrier days'], ['m2_distract', 'Distracted']], 'That’s how feeds change', start, `openPage('chg:Feeding:mock:dirD:1')`)
+    // A meal, start to finish: the approved meal page, then where milk and water fit (so drinks have a home on this stage).
+    g_meal: () => withPage('z_meal', root => { const k = sections('z_milkfood')['What to do']; if (k) addBefore(root, `<h2 class="${k.cls}">${F('Milk and water')}</h2>${k.html}`); }),
+    // Common allergens: the approved page, with keeping them in rotation before the reaction signs.
+    g_all: () => withPage('z_allergens', root => { const r = sections('z_rotate')['Easy ways to serve them']; if (r) addBefore(root, `<h2 class="${r.cls}">${F('Keep them in rotation')}</h2>${r.html}`); })
   };
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) { const q = String(r).split(':');
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && G[q[3]] && window.__hub) { const h = G[q[3]](q[4]); window.__fdLast = r; return h; }
-    let h = base.call(this, r, ...a);
-    // The stage's choking row opens the Gagging step of the guide, so first aid has one home and stays one tap away.
-    if (typeof h === 'string' && h.includes('mock:g_first')) h = h.replace(/(data-fd-choke onclick="openPage\('chg:Feeding:mock:)z_gag('\))/, '$1g_first:3$2');
-    return h; };
+    return base.call(this, r, ...a); };
 })();

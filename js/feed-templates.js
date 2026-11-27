@@ -272,6 +272,17 @@
         // Nov 19 (fresh read vs the Safety steps): one section of short rows instead of two blocks of three-line tiles.
         doTitle: 'Moving up a texture', doFig: () => '<section class="ph-rowcard">' + T.rows([['bowl', 'Mash with a fork', 'Instead of blending'], ['clock', 'Move on once this one is easy', 'Usually after a week or two'], ['hand', 'Pieces should squish', 'Between your finger and thumb']], 'Feeding') + '</section>',
         doNotes: [['', 'Go by skills, not the month', 'The ages are only examples'], ['', 'Don’t wait too long', 'Babies still on smooth purées past about 9 months can find lumps harder later']] }; },
+    // Nov 26 (Yarden's First foods inspiration, in the app's own look): textures and finger foods on one page,
+    // in the standard top card and sections: the progression, foods to try, quick tips, then safety.
+    g_tex: () => { const m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9, T = H().TPLB;
+      return { type: 'howto', label: 'Textures and finger foods', art: 'avocado', title: 'Move from smooth food to soft pieces',
+        why: 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.',
+        heroTitle: 'The texture progression', hero: () => T.photoSwitch([['Smooth', 'Around 6 months'], ['Lumpy', '7–8 months'], ['Soft pieces', '9 months on']],
+          [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']]], now),
+        pictureTitle: 'Finger foods to try', picture: () => T.photoGridMore(nine ? [['feeding/pieces-9', 'Banana, avocado, egg', 'Ripe, or well cooked'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin']]
+          : [['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']], 'See more foods'),
+        stepsTitle: 'Quick tips', stepsFig: () => '<section class="ph-rowcard">' + T.rows([['hand', 'It should squish', 'Between your finger and thumb'], ['bowl', 'Mash with a fork', 'Instead of blending'], ['clock', 'Move on once one is easy', 'Aim for lumps by about 9 months']], 'Feeding') + '</section>',
+        tips: [nine ? ['avocado', 'Small, soft pieces', 'About pea-size, to pinch'] : ['avocado', 'Finger-size strips', 'Easy to grip. Small pieces come later'], ['shield', 'Quarter grapes lengthwise', 'Cherry tomatoes too. No whole nuts'], ['highchair', 'Seated upright, with you', 'Every bite, never on the move']] }; },
     z_rotate: () => ({ type: 'expect', label: 'Keeping foods in rotation', art: 'peanut', title: 'Once {s’ve} had peanut or egg, keep it coming',
       why: 'Eating it a few times a week helps keep an allergy from starting.',
       doTitle: 'Easy ways to serve them', doFig: () => H().TPLB.photoGrid([['feeding/rot-oats', 'Peanut in oatmeal', 'Stir in thinned peanut butter'], ['feeding/rot-pancake', 'Egg in pancakes', 'Soft strips, well cooked']]),
