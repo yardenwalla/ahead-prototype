@@ -139,7 +139,24 @@
   const CLIP = '<svg viewBox="0 0 24 24" fill="none" stroke="#9b4766" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg>';
   const rowsCard = rows => `<section class="fd-list">${rows.map(([icon, t, x]) => `<div class="fd-list-r"><span class="fd-list-ic">${icon === 'note' ? CLIP : ic(icon)}</span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
   const dropSection = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); if (!h) return; let n = h.nextElementSibling; while (n && !n.matches('h2')) { const nx = n.nextElementSibling; n.remove(); n = nx; } h.remove(); };
+  // Nov 27 (Milk feeds pass): two-tile "see the difference" card, and a helper that lifts a card's small-print notes
+  // out into a calm card (facts) and a pink callout (a question), so nothing is lost and nothing is small print.
+  const compare = (a, b) => `<div class="fd-cmp">${[a, b].map(([tone, icon, t, x]) => `<section class="is-${tone}"><span class="fd-cmp-ic">${ic(icon)}</span><b>${F(t)}</b><small>${F(x)}</small></section>`).join('')}</div>`;
+  const liftNotes = (card, icons) => { const ul = card && card.querySelector('.tpl-notes'); if (!ul) return; const facts = [], asks = [];
+    [...ul.querySelectorAll('li')].forEach((li, i) => { const b = li.querySelector('b'), t = b ? b.textContent.trim().replace(/\.$/, '') : '', x = li.textContent.replace(b ? b.textContent : '', '').trim();
+      (/\?$/.test(t) ? asks : facts).push([icons[i] || 'heart', t, x]); });
+    ul.remove(); card.insertAdjacentHTML('afterend', (facts.length ? rowsCard(facts) : '') + asks.map(([, t, x]) => callout(t, x)).join('')); };
+  const cardAfter = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); return h && h.nextElementSibling; };
   const NB = {
+    m1_eve: () => withPage('m1_eve', root => { asGroup(root);
+      swapSection(root, 'What to do', rowsCard([['steth', 'Gaining well?', 'If your pediatrician says so, you can stop waking {o} for feeds.'], ['moon', 'When {s} {wake|wakes} hungry', 'Feed {o}. Keep it dim, and change {o} only if dirty.']])); }),
+    m2_night: () => withPage('m2_night', root => { asGroup(root);
+      const m = mo(), ck = m < 4 ? 4 : m < 6 ? 6 : m < 9 ? 9 : 12;
+      swapSection(root, 'What to do', rowsCard([['moon', 'When {s} {wake|wakes}', 'Feed {o}. Keep it dim and quiet.'], ['steth', 'Want to drop a night feed?', 'Ask at {p} ' + ck + '-month checkup.']])); }),
+    m2_away: () => withPage('m2_away', root => { asGroup(root); liftNotes(cardAfter(root, 'What to do'), ['clock', 'heart']); }),
+    m1_apart: () => withPage('m1_apart', root => { asGroup(root); const h = root.querySelectorAll('h2'); const last = h[h.length - 1]; let c = last; while (c && !c.querySelector('.tpl-notes') && !c.matches('.tpl-notes')) c = c.nextElementSibling;
+      if (c && c.matches('.tpl-notes')) { const w = document.createElement('section'); c.replaceWith(w); w.appendChild(c); c = w; }
+      if (c) { liftNotes(c, ['bottle', 'clock']); if (!c.textContent.trim()) c.remove(); } }),
     nb_enough: () => withPage('nb_enough', root => { asGroup(root);
       const notes = root.querySelector('.tpl-notes'); if (notes) notes.remove();
       const w = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F('{P} weight'));
@@ -155,11 +172,12 @@
   };
   const G = {
     // Milk feeds: hungrier days and distracted feeds on one page (the old two-step guide is gone).
-    g_change: () => { const n = sections('m1_now'), d = sections('m2_distract'), lead = n['What to do'] ? (() => { const x = document.createElement('div'); x.innerHTML = n['What to do'].html; const p = x.querySelector('p, .hub-card-text, div'); return p ? p.textContent.trim().split('\n')[0] : ''; })() : '';
-      return page(head('clock', 'How feeds are changing', 'Feeds change as {s} {grow|grows}', 'Hungrier days come and go, and daytime feeds get shorter. Both are normal.'),
+    g_change: () => { const n = sections('m1_now'), lead = n['What to do'] ? (() => { const x = document.createElement('div'); x.innerHTML = n['What to do'].html; const p = x.querySelector('p, .hub-card-text, div'); return p ? p.textContent.trim().split('\n')[0] : ''; })() : '';
+      return page(head('clock', 'How feeds are changing', 'Feeds change as {s} {grow|grows}', 'Hungrier days come and go, and daytime feeds get shorter. Both are common.'),
         sect('Hungrier days', lead || 'Feed more often for a few days, and things settle again.', n['What’s normal'] ? n['What’s normal'].html : '')
-        + sect('Distracted feeds', 'Short daytime feeds are okay. {S} still {get|gets} enough over the day.', '')
-        + tips('For calmer feeds', ['Feed when {s’s} drowsy.', 'Let {o} hold your finger.', 'Save the chatting for later.', 'Pops off? Try again a little later.'])); },
+        + sect('Distracted feeds', 'Short daytime feeds are okay. {S} still {get|gets} enough over the day.',
+          compare(['lav', 'eye', 'Busy room', 'Noise and movement, lots to watch'], ['pink', 'moon', 'Calmer spot', 'Dim and quiet. Save the chatting for later']))
+        + callout('Try this', 'Feed when {s’s} drowsy, and let {o} hold your finger. Pops off? Try again a little later.')); },
     // How to start: the safety rows become one short tips box (no mismatched icons).
     z_start: () => withPage('z_start', root => swapSection(root, 'Keep {o} safe', tips('Keep {o} safe', ['Soft enough to squash easily.', 'Seated upright in a high chair, with you.', 'No added salt or sugar.']))),
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;

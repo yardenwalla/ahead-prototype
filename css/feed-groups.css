@@ -185,3 +185,10 @@
 #main .fd-group .fd-callout>span svg{width:100%;height:100%}
 #main .fd-group .fd-callout b{display:block;font-size:16px;color:#7d3a57;margin:2px 0 4px}
 #main .fd-group .fd-callout p{margin:0;font-size:14px;line-height:1.45;color:#5e5a66}
+/* Nov 27: "see the difference" tiles (Milk feeds) */
+.fd-group .fd-cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 14px}
+.fd-group .fd-cmp section{border-radius:18px;padding:16px 14px;display:flex;flex-direction:column;gap:4px}
+.fd-group .fd-cmp .is-lav{background:#efedf8}.fd-group .fd-cmp .is-pink{background:#fbe4ec}
+.fd-group .fd-cmp-ic{width:40px;height:40px;border-radius:12px;background:#fff;display:grid;place-items:center;margin-bottom:8px}
+.fd-group .fd-cmp-ic svg{width:24px;height:24px}
+.fd-group .fd-cmp b{font-size:16px;color:#302d3c}.fd-group .fd-cmp small{font-size:13.5px;color:#6b6676;line-height:1.35}
