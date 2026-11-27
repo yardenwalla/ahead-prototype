@@ -241,3 +241,19 @@
 #main .fd-group .fd-stiles em.is-pink{background:#fbe4ec;color:#9b4766}#main .fd-group .fd-stiles em.is-green{background:#e6f2ea;color:#3f7a55}
 #main .fd-group .fd-stiles b{font-size:15px;color:#2b2733;padding:0 4px}#main .fd-group .fd-stiles small{font-size:13px;line-height:1.4;color:#5e5a66;padding:0 4px}
 #main .fd-group .fd-trows .fd-list-r{padding:13px 0}
+/* Nov 27 (Yarden: "don't we do different colors?"): the app's Nov 22 icon-row rule, as in Health, Sleep and Safety.
+   The icon keeps Feeding's color; the soft background rotates green, blue, yellow, peach, pink. */
+#main .care-v2.fd-group .fd-list-r{--t-bg:#e6f5ec}
+#main .care-v2.fd-group .fd-list-r:nth-child(5n+2){--t-bg:#e7effc}
+#main .care-v2.fd-group .fd-list-r:nth-child(5n+3){--t-bg:#fff3dc}
+#main .care-v2.fd-group .fd-list-r:nth-child(5n+4){--t-bg:#fdeee6}
+#main .care-v2.fd-group .fd-list-r:nth-child(5n+5){--t-bg:#fdeef2}
+#main .care-v2.fd-group .fd-list-ic{background:var(--t-bg)}
+#main .care-v2.fd-group .fd-three li:nth-child(1) .fd-three-ic{background:#e6f5ec}
+#main .care-v2.fd-group .fd-three li:nth-child(2) .fd-three-ic{background:#e7effc}
+#main .care-v2.fd-group .fd-three li:nth-child(3) .fd-three-ic{background:#fff3dc}
+#main .hub-detail.care-v2.fd-group[data-ss] .ph-rowcard .hub-list > :nth-child(5n+1) .hub-dot{background:#e6f5ec!important}
+#main .hub-detail.care-v2.fd-group[data-ss] .ph-rowcard .hub-list > :nth-child(5n+2) .hub-dot{background:#e7effc!important}
+#main .hub-detail.care-v2.fd-group[data-ss] .ph-rowcard .hub-list > :nth-child(5n+3) .hub-dot{background:#fff3dc!important}
+#main .hub-detail.care-v2.fd-group[data-ss] .ph-rowcard .hub-list > :nth-child(5n+4) .hub-dot{background:#fdeee6!important}
+#main .hub-detail.care-v2.fd-group[data-ss] .ph-rowcard .hub-list > :nth-child(5n+5) .hub-dot{background:#fdeef2!important}
