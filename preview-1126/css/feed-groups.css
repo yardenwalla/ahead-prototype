@@ -1,0 +1,24 @@
+/* Nov 26: grouped Feeding pages (one line under a heading, compact check strips), in Feeding's pink. */
+.fd-group .fd-g-lead{margin:-4px 2px 12px;font-size:15px;line-height:1.45;color:#6b6573}
+.fd-group .fd-g-strip{margin:22px 0 0;padding:16px 18px;border-radius:20px;background:#fbe4ec}
+.fd-group .fd-g-strip + .fd-g-strip{margin-top:12px;background:#fffdfa;border:1px solid #ece7e2}
+.fd-group .fd-g-strip-h{display:block;font-size:16px;line-height:1.3;font-weight:700;color:#2b2733;margin-bottom:10px}
+.fd-group .fd-g-strip ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.fd-group .fd-g-strip li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.4;color:#2b2733}
+.fd-group .fd-g-strip li i{flex:none;width:22px;height:22px;border-radius:50%;background:#884866;color:#fff;display:grid;place-items:center;margin-top:-1px}
+.fd-group .fd-g-strip + .fd-g-strip li i{background:#f7d9e5;color:#884866}
+#main .care-v2.fd-group .ss-do.fd-g-tips{margin-top:20px}
+.fd-group .hub-h2 + .fd-g-lead{margin-top:-6px}
+/* Allergen tracker as photo tiles */
+#main .fd-al-photos{padding:14px 12px 12px;margin:0 0 12px}
+#main .fd-al-h{display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 12px}
+#main .fd-al-h b{font-size:15px}
+#main .fd-al-h small{font-weight:700;color:var(--ss-ink,#884866)}
+#main .fd-al-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 6px}
+#main .fd-al-t{width:calc((100% - 24px) / 5);font:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:center;color:inherit;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px}
+#main .fd-al-img{position:relative;display:block;width:100%;aspect-ratio:1;border-radius:12px;overflow:hidden;border:2px solid transparent}
+#main .fd-al-img img{width:100%;height:100%;object-fit:cover;display:block}
+#main .fd-al-t.is-on .fd-al-img{border-color:var(--ss-ink,#884866)}
+#main .fd-al-img i{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:var(--ss-ink,#884866);color:#fff;display:grid;place-items:center}
+#main .fd-al-t b{font-size:12.5px;font-weight:600;margin-top:4px;white-space:nowrap}
+#main .fd-al-t small{font-size:12px;line-height:1.3;color:#6b6573}
