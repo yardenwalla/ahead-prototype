@@ -56,28 +56,39 @@
   // each open with one plain line, and one pink tips box at the end. No stacks of row cards.
   const sect = (title, line, fig) => `<h2 class="hub-h2">${F(title)}</h2>${line ? `<p class="fd-g-lead">${F(line)}</p>` : ''}${fig}`;
   const tips = (title, xs) => `<section class="ss-do fd-g-tips"><b>${F(title)}</b><ul class="ss-do-list">${xs.filter(Boolean).map(t => `<li>${F(t)}</li>`).join('')}</ul></section>`;
+  // The tracker as photo tiles: each allergen in a form that's safe for a baby, tapped once it's been tried.
+  const AL = [['Peanut', 'al-peanut', 'Thinned, smooth'], ['Egg', 'al-egg', 'Well cooked'], ['Dairy', 'al-dairy', 'Plain yogurt'], ['Wheat', 'al-wheat', 'Soft toast'], ['Soy', 'al-soy', 'Soft tofu'], ['Fish', 'al-fish', 'Flaked salmon'], ['Shellfish', 'al-shellfish', 'Minced shrimp'], ['Sesame', 'al-sesame', 'Thinned tahini'], ['Tree nuts', 'al-treenuts', 'Thin nut butter']];
+  const alDone = () => { try { return JSON.parse(localStorage.getItem('ahead-fd-allergens') || '[]'); } catch (e) { return window.__alMem || []; } };
+  const tick = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
+  const alPhotos = () => { const done = alDone();
+    return `<section class="hub-card fd-al-photos" id="fd-al" data-photo="1"><div class="fd-al-h"><b>${F('Tap each one once {s’s} had it')}</b><small>${done.length} ${F('of')} ${AL.length}</small></div><div class="fd-al-grid">${AL.map(([a, img, sub]) => { const on = done.includes(a);
+      return `<button type="button" class="fd-al-t${on ? ' is-on' : ''}" aria-pressed="${on}" onclick="__alTick('${a}')"><span class="fd-al-img"><img src="assets/feeding/${img}.jpg?v=1" alt="" loading="lazy">${on ? `<i>${tick}</i>` : ''}</span><b>${F(a)}</b><small>${F(sub)}</small></button>`; }).join('')}</div></section>`; };
+  { const prev = window.__alTick; window.__alTick = a => { const el = document.getElementById('fd-al');
+      if (!el || !el.dataset.photo) return prev && prev(a);
+      let d = alDone(); d = d.includes(a) ? d.filter(x => x !== a) : d.concat(a); window.__alMem = d; try { localStorage.setItem('ahead-fd-allergens', JSON.stringify(d)); } catch (e) { }
+      el.outerHTML = alPhotos(); }; }
   const mo = () => window.__fdx ? window.__fdx.ageMo() : 8;
   const G = {
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
-        sect('The texture progression', 'Move on once each one is easy. Aim for lumps by about 9 months.',
+        sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',
           T.photoSwitch([['Smooth', 'Around 6 months'], ['Lumpy', '7–8 months'], ['Soft pieces', '9 months on']],
             [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']]], now))
         + sect('Finger foods to try', 'Soft enough to squish between your finger and thumb.',
           T.photoGridMore(nine ? [['feeding/pieces-9', 'Banana, avocado, egg', 'Ripe, or well cooked'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin']]
             : [['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']], 'See more foods'))
-        + tips('Quick tips', ['Mash with a fork, not a blender.', nine ? 'Cut small, pea-size pieces {s} can pinch.' : 'Cut finger-size strips {s} can grip.', 'Quarter grapes lengthwise, and stay with {o} while {s} {eat|eats}.'])); },
-    g_meal: () => { const T = H().TPLB, milk = ['Milk before or after meals, whichever suits {p} mood.', 'Water from a cup with meals, 4–8 oz a day at most.'];
+        + tips('Quick tips', ['Mash with a fork, not a blender.', nine ? 'Cut small, pea-size pieces {s} can pinch.' : 'Cut finger-size strips {s} can grip.', 'Quarter grapes and cherry tomatoes lengthwise. No whole nuts.', 'Keep {o} seated upright, and stay with {o} while {s} {eat|eats}.'])); },
+    g_meal: () => { const T = H().TPLB, milk = ['Milk before or after meals, whichever suits {p} mood.', 'Water from a cup with meals, 4–8 oz a day at most.', 'Milk eases off slowly as meals grow, mostly after 9 months.'];
       if (mo() >= 8.5) return withPage('z_meal', root => addBefore(root, tips('Milk and water', milk)));
       const lead = sections('z_meal')._lead;
       return page(head('highchair', 'A meal, start to finish', 'First meals are just a few bites', 'Milk is still {p} main food. Let {o} set the pace.'),
         sect('What a meal looks like', '', `<div class="ct-page is-howto">${lead}</div>`)
         + sect('The simple flow', '', T.photoGrid([['feeding/meal-1', '1. Sit {o} up', 'Strapped in, facing you'], ['feeding/meal-2', '2. Offer a little', 'A spoonful, or a soft strip'], ['feeding/meal-3', '3. Let {o} lead', 'Done when {s} {turn|turns} away']]))
-        + tips('Good to know', ['Expect mess. Most of it ends up on the tray at first.'].concat(milk))); },
-    g_all: () => { const T = H().TPLB, X = window.__fdx, b = X && X.isBreast ? X.isBreast() : true;
+        + tips('Good to know', ['Pick a calm time, when {s’s} not too hungry.', 'Expect mess. Most of it ends up on the tray at first.'].concat(milk))); },
+    g_all: () => { const T = H().TPLB, X = window.__fdx, b = X && X.isBreast ? X.isBreast() : true, f = X && X.formulaFam ? X.formulaFam() : false, thin = !b ? 'formula' : f ? 'breast milk or formula' : 'breast milk';
       return page(head('peanut', 'Common allergens', 'Try the common allergens early', 'Start around 6 months. Ask first if {s} has severe eczema or an egg allergy.'),
-        sect('The 9 common allergens', 'Try one at a time, then keep it in rotation.', X && X.pron ? X.pron(window.__alCard()) : window.__alCard())
-        + sect('How to introduce', '', window.ctPhotoSteps([['photo:feeding/pb-spoon', 'A little smooth peanut butter', 'About ½ teaspoon. Never whole nuts'], ['photo:feeding/pb-thin', 'Thin it', 'With warm water or ' + (b ? 'breast milk' : 'formula') + ', until runny'], ['photo:feeding/pb-offer', 'Offer it at home', 'Early in the day, so you can watch']], [['Egg works the same way', 'Well cooked, never runny']]))
+        sect('The 9 common allergens', 'Try one at a time, then keep it in rotation.', alPhotos())
+        + sect('How to introduce', '', window.ctPhotoSteps([['photo:feeding/pb-spoon', 'A little smooth peanut butter', 'About ½ teaspoon. Never whole nuts'], ['photo:feeding/pb-thin', 'Thin it', 'With warm water or ' + thin + ', until runny'], ['photo:feeding/pb-offer', 'Offer it at home', 'Early in the day, so you can watch']], [['Egg works the same way', 'Well cooked, never runny']]))
         + tips('Keep them coming', ['A few times a week once {s’ve} had it.', 'Peanut stirred into oatmeal, egg baked into pancakes.'])
         + T.calls({ ped: 'a few hives, or vomiting, after a new food.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or {s’s} very sleepy or floppy.' })); }
   };
