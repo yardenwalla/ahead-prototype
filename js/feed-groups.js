@@ -139,11 +139,12 @@
       const wet = d <= 2 ? '1–2 a day for now, then more each day.' : d <= 4 ? '3–4 a day now. From day 6, 6 or more.' : d === 5 ? 'About 5 today. From day 6, 6 or more.' : '6 or more a day, pale and clear.';
       const poop = d <= 2 ? 'Black and sticky at first. It changes color over the first week.' : d <= 5 ? 'Turning from greenish to yellow this week.' : nurse ? 'Yellow and seedy is typical now.' : 'Tan to yellow is typical now.';
       return page(head('diaper', 'Getting enough', 'Diapers and growth tell the story', 'You don’t need to measure every drop.'),
-        sect('What to notice', '', listCard([['diaper', 'Wet diapers', wet], ['drop', 'Poop', poop], ['steth', 'Weight', 'Back to birth weight by 2 weeks, then about 5–7 oz a week. Checkups track it, so skip home scales.']]))
-        + callout('When to call', 'Fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.')); },
+        sect('What to notice', '', listCard([['diaper', 'Wet diapers', wet], ['drop', 'Poop', poop], ['heart', 'After feeds', '{S’s} content for a while after most feeds.'], ['steth', 'Weight', 'Most babies lose a little at first, then are back to birth weight by 2 weeks. Checkups track it, so skip home scales.']]))
+        + callout('When to call', 'Fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.')
+        + `<p class="fd-g-lead fd-after">${F('Until things feel settled, it helps to note feeds and diapers.')}</p>`); },
     nb_eve: () => { const X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true;
       return page(head('moon', 'Evenings and nights', 'Busy evenings, calmer nights', 'Feeds often bunch together in the evening. That eases by 6–8 weeks.'),
-        sect('How the day changes', '', dayline([['sun', 'Day', 'Feeds every 2–3 hours.', 'Until back to birth weight, wake {o} after 3 hours.'], ['sunset', 'Evening', 'Several feeds close together.', nurse ? 'Switch sides often to keep milk flowing.' : 'Offer smaller bottles, more often.'], ['moon', 'Night', 'Often one longer stretch.', 'Keep it dim, and change only if dirty.']]))
+        sect('How the day changes', '', dayline([['sun', 'Day', 'Feeds every 2–3 hours.', 'Until back to birth weight, wake {o} after 3 hours.'], ['sunset', 'Evening', 'Cluster feeding: several feeds close together.', nurse ? 'Switch sides often to keep milk flowing.' : 'Offer smaller bottles, more often.'], ['moon', 'Night', 'Often one longer stretch.', 'Keep it dim, and change only if dirty. Until back to birth weight, wake {o} after 4 hours.']]))
         + `<p class="fd-g-lead fd-after">${F('An example, not a schedule.')}</p>`
         + callout('Hard to wake for a feed?', 'Undress {o} to {p} diaper, or stroke {p} feet.')); }
   };
