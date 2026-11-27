@@ -55,7 +55,7 @@
   // Nov 26 (Yarden: "the inspiration looks cleaner"): each page is the standard top card, two or three sections that
   // each open with one plain line, and one pink tips box at the end. No stacks of row cards.
   const sect = (title, line, fig) => `<h2 class="hub-h2">${F(title)}</h2>${line ? `<p class="fd-g-lead">${F(line)}</p>` : ''}${fig}`;
-  const tips = (title, xs) => `<section class="ss-do fd-g-tips"><b>${F(title)}</b><ul class="ss-do-list">${xs.filter(Boolean).map(t => `<li>${F(t)}</li>`).join('')}</ul></section>`;
+  const tips = (title, xs) => `<section class="ss-do fd-g-tips" style="margin-top:16px"><b>${F(title)}</b><ul class="ss-do-list">${xs.filter(Boolean).map(t => `<li>${F(t)}</li>`).join('')}</ul></section>`;
   // The tracker as photo tiles: each allergen in a form that's safe for a baby, tapped once it's been tried.
   const AL = [['Peanut', 'al-peanut', 'Thinned, smooth'], ['Egg', 'al-egg', 'Well cooked'], ['Dairy', 'al-dairy', 'Plain yogurt'], ['Wheat', 'al-wheat', 'Soft toast'], ['Soy', 'al-soy', 'Soft tofu'], ['Fish', 'al-fish', 'Flaked salmon'], ['Shellfish', 'al-shellfish', 'Minced shrimp'], ['Sesame', 'al-sesame', 'Thinned tahini'], ['Tree nuts', 'al-treenuts', 'Thin nut butter']];
   const alDone = () => { try { return JSON.parse(localStorage.getItem('ahead-fd-allergens') || '[]'); } catch (e) { return window.__alMem || []; } };
@@ -68,7 +68,19 @@
       let d = alDone(); d = d.includes(a) ? d.filter(x => x !== a) : d.concat(a); window.__alMem = d; try { localStorage.setItem('ahead-fd-allergens', JSON.stringify(d)); } catch (e) { }
       el.outerHTML = alPhotos(); }; }
   const mo = () => window.__fdx ? window.__fdx.ageMo() : 8;
+  // Swap a section of an approved page (heading and its card) for new markup, keeping the rest of the page as is.
+  const swapSection = (root, heading, html) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); if (!h) return;
+    let n = h.nextElementSibling; while (n && !n.matches('h2')) { const nx = n.nextElementSibling; n.remove(); n = nx; }
+    const frag = document.createElement('div'); frag.innerHTML = html; h.replaceWith(...frag.childNodes); };
   const G = {
+    // Milk feeds: hungrier days and distracted feeds on one page (the old two-step guide is gone).
+    g_change: () => { const n = sections('m1_now'), d = sections('m2_distract'), lead = n['What to do'] ? (() => { const x = document.createElement('div'); x.innerHTML = n['What to do'].html; const p = x.querySelector('p, .hub-card-text, div'); return p ? p.textContent.trim().split('\n')[0] : ''; })() : '';
+      return page(head('clock', 'How feeds are changing', 'Feeds change as {s} {grow|grows}', 'Hungrier days come and go, and daytime feeds get shorter. Both are normal.'),
+        sect('Hungrier days', lead || 'Feed more often for a few days, and things settle again.', n['What’s normal'] ? n['What’s normal'].html : '')
+        + sect('Distracted feeds', 'Short daytime feeds are okay. {S} still {get|gets} enough over the day.', '')
+        + tips('For calmer feeds', ['Feed when {s’s} drowsy.', 'Let {o} hold your finger.', 'Save the chatting for later.', 'Pops off? Try again a little later.'])); },
+    // How to start: the safety rows become one short tips box (no mismatched icons).
+    z_start: () => withPage('z_start', root => swapSection(root, 'Keep {o} safe', tips('Keep {o} safe', ['Soft enough to squash easily.', 'Seated upright in a high chair, with you.', 'No added salt or sugar.']))),
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',
@@ -94,6 +106,6 @@
   };
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) { const q = String(r).split(':');
-    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && G[q[3]] && window.__hub) { const h = G[q[3]](q[4]); window.__fdLast = r; return h; }
+    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && G[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = G[q[3]](q[4]); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     return base.call(this, r, ...a); };
 })();

@@ -252,7 +252,8 @@
     z_meal: () => mo() >= 8.5
       ? { type: 'howto', label: 'Feeding {o}self', art: 'plate', title: 'Most family foods are fine for {o} now',
         why: 'Small, soft pieces of your meal give {o} real practice.',
-        pictureTitle: 'Ideas from your plate', picture: () => H().TPLB.chips(['Shredded chicken', 'Scrambled egg', 'Squashed beans', 'Soft pasta', 'Banana or ripe pear', 'Soft-cooked veggies']),
+        // Nov 26: the plate ideas as photo tiles (like Finger foods to try), so parents see the size and softness.
+        pictureTitle: 'Ideas from your plate', picture: () => H().TPLB.photoGridMore([['feeding/plate-chicken', 'Shredded chicken', 'Soft and moist'], ['feeding/al-egg', 'Scrambled egg', 'Well cooked'], ['feeding/plate-beans', 'Squashed beans', 'Lightly mashed'], ['feeding/opt-pasta', 'Soft pasta', 'Well cooked'], ['feeding/plate-veg', 'Soft-cooked veggies', 'Small, tender pieces'], ['feeding/opt-banana', 'Banana or ripe pear', 'Soft pieces']], 'See more foods'),
         ordered: false, steps: [['plate', 'Share from your plate', 'Take out {p} portion before adding salt'], ['hand', '{S} {feed|feeds} {o}self', 'Fingers first, and a spoon to practice']] }
       : { type: 'howto', ct: 'howto', label: 'First meals', art: 'highchair', title: 'First meals are just a few bites',
         why: 'Solids are practice for now, and milk is still {p} main food. Let {o} set the pace.',
