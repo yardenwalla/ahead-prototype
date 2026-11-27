@@ -138,3 +138,13 @@
 #main .fd-group .fd-note.is-pink b{color:#9b4766}
 #main .fd-group .fd-note b{display:block;font-size:15px;color:#2b2733;margin-bottom:4px}
 #main .fd-group .fd-note p{margin:0;font-size:14px;line-height:1.45;color:#5e5a66}
+#main .fd-group .fd-latch ol{list-style:none;margin:0;padding:6px 16px}
+#main .fd-group .fd-latch li{display:flex;gap:12px;align-items:center;padding:10px 0}
+#main .fd-group .fd-latch li+li{border-top:1px solid #ece7e2}
+#main .fd-group .fd-latch li i{flex:none;width:28px;height:28px;border-radius:50%;background:#fbe4ec;color:#9b4766;font-style:normal;font-size:13px;font-weight:700;display:grid;place-items:center}
+#main .fd-group .fd-latch li b{display:block;font-size:15px;color:#2b2733}
+#main .fd-group .fd-latch li small{display:block;font-size:13px;color:#5e5a66;margin-top:1px}
+#main .fd-group .fd-latch-look{background:#f7f1ec;padding:12px 16px 14px}
+#main .fd-group .fd-latch-look b{display:block;font-size:14px;color:#2b2733;margin-bottom:2px}
+#main .fd-group .fd-latch-look span{font-size:13.5px;line-height:1.45;color:#5e5a66}
+#main .fd-group .fd-latch + .fd-watch{margin:0 0 12px}
