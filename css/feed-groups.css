@@ -282,3 +282,13 @@
 #main .fd-group .tpl-versus ul{margin:0;padding-left:16px;font-size:13.5px;line-height:1.4;color:#3d3945}
 #main .fd-group .tpl-versus li+li{margin-top:4px}
 #main .fd-group .fd-wait li span{font-weight:600}
+#main .fd-group .fd-grapefig{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:10px;margin-bottom:16px}
+#main .fd-group .fd-grapefig img{border-radius:14px}
+#main .fd-group .fd-figcap{font-size:14.5px;line-height:1.5;color:#3d3945;padding:10px 6px 4px}
+#main .fd-group .tpl-versus p{font-size:14px;line-height:1.45;margin:6px 0 10px}
+#main .fd-group .tpl-versus em{display:block;font-style:normal;font-size:13.5px;font-weight:700;line-height:1.35}
+#main .fd-group .tpl-versus em svg{width:13px;height:13px;vertical-align:-1px}
+#main .fd-group .tpl-versus .is-ok em{color:#3f7a55}#main .fd-group .tpl-versus .is-act em{color:#c0485f}
+#main .fd-group .fd-grapefig{margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:0}
+#main .fd-group p.fd-figcap{margin:0 0 16px;background:#fffdfa;border:1px solid #ece7e2;border-top:0;border-radius:0 0 20px 20px;padding:4px 16px 14px}
+#main .fd-group .tpl-versus em svg{display:inline;margin-right:3px}
