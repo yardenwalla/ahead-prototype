@@ -217,3 +217,11 @@
 #main .fd-group .fd-tally b{grid-area:l;display:block}#main .fd-group .fd-tally .sv2-dots{grid-area:d}#main .fd-group .fd-tally em{grid-area:s}
 #main .fd-group .fd-tally .sv2-dots s{width:16px;height:16px}
 #main .fd-group .fd-tally>div{grid-template-columns:minmax(0,1.2fr) 82px minmax(0,1fr)}#main .fd-group .fd-tally .sv2-dots{justify-self:start}
+#main .fd-group .fd-do{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:16px 18px;margin:0 0 16px}
+#main .fd-group .fd-do p{margin:0;font-size:15px;line-height:1.5;color:#3d3945}#main .fd-group .fd-do p b{color:#2b2733}
+#main .fd-group .fd-do .fd-do-note{margin-top:14px;padding-top:12px;border-top:1px solid #ece7e2;font-size:14px;color:#9b4766}#main .fd-group .fd-do .fd-do-note b{color:#9b4766}
+#main .fd-group .fd-tally>div{grid-template-columns:minmax(0,1.55fr) 66px minmax(0,1fr);gap:8px}#main .fd-group .fd-tally b{font-size:13.5px;white-space:nowrap}#main .fd-group .fd-tally .sv2-dots s{width:13px;height:13px}#main .fd-group .fd-tally .sv2-dots{gap:3px}#main .fd-group .fd-tally em{font-size:13px}
+#main .fd-group .fd-tally>div{grid-template-columns:minmax(0,1fr) 56px auto}#main .fd-group .fd-tally em{flex-direction:row;align-items:center;gap:6px;white-space:nowrap}
+#main .fd-group .fd-tally>div{grid-template-columns:minmax(0,1fr) 58px 108px}#main .fd-group .fd-tally em{flex-direction:column;align-items:flex-end;gap:3px}#main .fd-group .fd-tally .sv2-dots{justify-self:start;display:flex}
+#main .fd-group .fd-tally>div{grid-template-columns:minmax(0,1fr) 52px 98px;gap:6px}#main .fd-group .fd-tally b{font-size:13px}#main .fd-group .fd-tally .sv2-dots{gap:2px;min-height:0}#main .fd-group .fd-tally .sv2-dots s{width:12px;height:12px;border-width:1.5px}#main .fd-group .fd-tally em{font-size:12.5px}
+#main .fd-group .fd-tally>div:not(.is-on){border-radius:0}

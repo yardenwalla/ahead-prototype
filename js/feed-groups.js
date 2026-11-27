@@ -151,7 +151,7 @@
   const nursing = () => !!(window.__fdx && window.__fdx.nurses && window.__fdx.nurses());
   const helpCard = (t, rows) => `<section class="fd-help"><header><span>${SPARK}</span><b>${F(t)}</b></header>${rowsCard(rows)}</section>`;
   const nightChart = () => { const m = mo(), k = m < 1.5 ? 0 : m < 2.5 ? 1 : m < 5 ? 2 : m < 8 ? 3 : 4;
-    const rows = [['Newborn weeks', 4, 'Several a night'], ['Around 2 months', 3, 'Still common'], ['Around 3 months', 3, 'Often 1–2'], ['Around 6 months', 2, 'Often fewer'], ['Later in the first year', 1, 'Often none']];
+    const rows = [['Newborn weeks', 4, 'Several a night'], ['Around 2 months', 3, 'Still common'], ['Around 3 months', 3, 'Often 1–2'], ['Around 6 months', 2, 'Often fewer'], ['Near 1 year', 1, 'Often none']];
     return `<div class="sv2 is-feed"><section class="sv2-vis"><header><em>${F('Night feeds over the first year')}</em><span>${F('Typical')}</span></header><div class="fd-tally">${rows.map(([l, nn, st], i) => `<div class="${i === k ? 'is-on' : ''}"><b>${F(l)}</b><span class="sv2-dots">${Array.from({ length: nn }, (_, j) => `<s class="${j === nn - 1 ? 'is-maybe' : ''}"></s>`).join('')}</span><em>${i === k ? `<i>${F('Now')}</i>` : ''}${F(st)}</em></div>`).join('')}</div><p class="sv2-key"><s></s>${F('One night feed')}<s class="is-maybe"></s>${F('Some nights')}</p></section></div>`; };
   const spurtChart = () => { const base = window.__fdSpurtFig ? window.__fdSpurtFig() : ''; if (!base) return '';
     const bump = c => `L${c - 46},140 C${c - 26},140 ${c - 20},${82} ${c},${82} C${c + 20},82 ${c + 26},140 ${c + 46},140`;
@@ -160,21 +160,18 @@
       + pill(88, 58, 'Growth spurt', 92, '#fbe4ec', '#884866') + pill(250, 58, 'Growth spurt', 92, '#fbe4ec', '#884866') + pill(169, 120, 'Calmer weeks', 92, '#efedf8', '#4f4a63')
       + `<text x="14" y="164">${F('Birth')}</text><text x="88" y="164" text-anchor="middle">${F('6 weeks')}</text><text x="169" y="164" text-anchor="middle">${F('2 months')}</text><text x="250" y="164" text-anchor="middle">${F('3 months')}</text></svg>`;
     return base.replace(/<svg[\s\S]*<\/svg>/, svg); };
+  const doCard = (parts, note) => `<section class="fd-do"><p>${parts.map(([t, bold]) => bold ? `<b>${F(t)}</b>` : F(t)).join(' ')}</p>${note ? `<p class="fd-do-note"><b>${F(note[0])}</b> ${F(note[1])}</p>` : ''}</section>`;
   const cardAfter = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); return h && h.nextElementSibling; };
   const NB = {
     // v3 (Yarden: liked the befores; her mockups): the befores, with a tighter night chart, icon rows for what to do,
     // and the early-weeks-only "hard to wake" callout.
+    // v4 (Yarden's mockup): chart, then one compact action card with the key action in bold and a call line.
     m1_eve: () => withPage('m1_eve', root => { asGroup(root); swapSection(root, 'What’s normal', nightChart(), 'What’s normal');
-      swapSection(root, 'What to do', rowsCard([['sunset', 'In the evening', nursing() ? 'Feeds may cluster. Switch sides to keep milk flowing.' : 'Feeds may cluster. Offer smaller bottles, more often.'],
-        ['moon', 'At night', 'Keep it dim and quiet, and change {o} only if dirty.'],
-        ['steth', 'Gaining well?', 'If your pediatrician says so, you can stop waking {o}. Still feed {o} when {s} {wake|wakes} hungry.'],
-        ['clock', 'Looking ahead', 'Many babies drop to one or two night feeds by around 3 months.']])
-        + callout('Hard to wake for a feed?', 'Undress {o} to {p} diaper, or gently stroke {p} feet.'), 'What to do'); }),
+      swapSection(root, 'What to do', doCard([['Once your pediatrician confirms {s’s} gaining well, you can stop waking {o}.'], ['Feed {o} when {s} {wake|wakes} hungry.', 1], ['Keep nights dim and quiet.']],
+        ['Hard to wake or too sleepy to feed?', 'Call your pediatrician.']), 'What to do'); }),
     m2_night: () => withPage('m2_night', root => { asGroup(root); swapSection(root, 'What’s normal', nightChart(), 'What’s normal');
       const m = mo(), ck = m < 4 ? 4 : m < 6 ? 6 : m < 9 ? 9 : 12;
-      swapSection(root, 'What to do', rowsCard([['moon', 'At night', 'Feeding {o} back to sleep is fine. Keep it dim and quiet.'],
-        ['steth', 'Want to drop a night feed?', 'Ask at {p} ' + ck + '-month checkup.'],
-        ['clock', 'Looking ahead', m < 6 ? 'Night feeds often get fewer by around 6 months.' : 'Many babies stop night feeds later in the first year.']]), 'What to do'); }),
+      swapSection(root, 'What to do', doCard([['Feeding {o} back to sleep is fine. Keep nights dim and quiet.'], ['Ask about dropping night feeds at {p} ' + ck + '-month checkup.', 1]]), 'What to do'); }),
     m2_away: () => withPage('m2_away', root => { asGroup(root); liftNotes(cardAfter(root, 'What to do'), ['clock', 'heart']); }),
     m1_apart: () => withPage('m1_apart', root => { asGroup(root); const h = root.querySelectorAll('h2'); const last = h[h.length - 1]; let c = last; while (c && !c.querySelector('.tpl-notes') && !c.matches('.tpl-notes')) c = c.nextElementSibling;
       if (c && c.matches('.tpl-notes')) { const w = document.createElement('section'); c.replaceWith(w); w.appendChild(c); c = w; }
