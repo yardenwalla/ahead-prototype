@@ -118,6 +118,30 @@
     const vid = nurse ? watch('', 'Watch: A good latch', 'A short step-by-step video.', 'https://www.youtube.com/watch?v=y--syZR0u1E')
       : watch('pace-step-3', 'Watch: Pacing a bottle', 'A short look at a relaxed, baby-led feed.', 'https://www.youtube.com/watch?v=OGPm5SpLxXY');
     return page(top, sect('The simple flow', '', steps) + how + sect('Ways to burp', '', strip([['burp-shoulder', 'Over your shoulder'], ['burp-sitting', 'Sitting on your lap'], ['burp-tummy', 'Tummy-down']])) + notes + vid); };
+  // Nov 27 (page-by-page pass to the nursing-page bar): pages that already lead with the right chart keep it; what sits
+  // under it moves into the same compact pieces (a three-column card, a feel strip, short notes) instead of row stacks.
+  const rowsOf = part => { if (!part) return []; const d = document.createElement('div'); d.innerHTML = part.html;
+    return [...d.querySelectorAll('.hub-row')].map(r => [((r.querySelector('b') || {}).textContent || '').trim(), ((r.querySelector('small') || {}).textContent || '').trim()]); };
+  const noteOf = part => { if (!part) return null; const d = document.createElement('div'); d.innerHTML = part.html; const p = [...d.querySelectorAll('p, .tpl-notes li')].find(x => x.querySelector('b') && !x.closest('.hub-row')); return p ? [p.querySelector('b').textContent.trim(), p.textContent.replace(p.querySelector('b').textContent, '').trim()] : null; };
+  const BULB = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2h5c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg>';
+  const colsCard = (xs, feel) => `<section class="fd-card"><ol class="fd-three">${xs.map(([t, x]) => `<li><b>${t}</b><span>${x}</span></li>`).join('')}</ol>${feel ? `<div class="fd-feel"><span>${/\?$/.test(feel[0]) ? BULB : CHECK}</span><div><b>${feel[0]}</b><small>${feel[1]}</small></div></div>` : ''}</section>`;
+  const asGroup = root => { root.classList.add('fd-group'); return root; };
+  const NB = {
+    // Evenings and nights: the day-by-feeds chart stays; "how long it lasts" becomes the line under it; the three
+    // what-to-do rows become one three-column card, with "hard to wake?" as its strip.
+    nb_eve: () => withPage('nb_eve', root => { asGroup(root); const all = sections('nb_eve'), todo = all['What to do'];
+      const long = [...root.querySelectorAll('.hub-card, section, div')].find(e => /^How long it lasts/.test((e.textContent || '').trim()) && e.textContent.length < 160);
+      const line = long ? long.textContent.replace('How long it lasts', '').trim() : '';
+      if (long) long.remove();
+      const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === 'What’s normal'); if (h && line) h.insertAdjacentHTML('afterend', `<p class="fd-g-lead">${line}</p>`);
+      const rows = rowsOf(todo), hard = noteOf(todo);
+      if (rows.length) swapSection(root, 'What to do', `<h2 class="hub-h2">${F('What to do')}</h2>` + colsCard(rows.slice(0, 3), hard)); }),
+    // Getting enough: the diaper table and weight curve stay; the repeated "good signs during feeds" line goes (the feed
+    // page has it); the two rows become one short note.
+    nb_enough: () => withPage('nb_enough', root => { asGroup(root);
+      [...root.querySelectorAll('p, .tpl-notes li')].filter(p => /^Good signs during feeds/.test(p.textContent.trim())).forEach(p => p.remove());
+      swapSection(root, 'What to do', `<section class="fd-note is-plain"><b>${F('Good to know')}</b><p>${F('Note feeds and diapers until things feel settled. Skip home scales: checkups track {p} weight.')}</p></section>`); })
+  };
   const G = {
     // Milk feeds: hungrier days and distracted feeds on one page (the old two-step guide is gone).
     g_change: () => { const n = sections('m1_now'), d = sections('m2_distract'), lead = n['What to do'] ? (() => { const x = document.createElement('div'); x.innerHTML = n['What to do'].html; const p = x.querySelector('p, .hub-card-text, div'); return p ? p.textContent.trim().split('\n')[0] : ''; })() : '';
@@ -153,6 +177,7 @@
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) { const q = String(r).split(':');
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'xa' && q[4] === 'feed' && window.__hub && !window.__fdIn) { window.__fdLast = r; return nbFeed(); }
+    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && NB[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = NB[q[3]](); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && G[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = G[q[3]](q[4]); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     return base.call(this, r, ...a); };
 })();
