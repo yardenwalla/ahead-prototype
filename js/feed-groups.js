@@ -212,7 +212,7 @@
       tpl.insertAdjacentHTML('beforeend', sect('Before the first bite', '', checkCard([['Seated upright, with you', 'In a supportive high chair, watched the whole time.'], ['Soft enough to squash', 'In a safe size, shape and texture.']]))
         + `<p class="fd-lav">${F('Milk is still {p} main food. Start with small tastes, and skip added salt or sugar.')}</p>`); }),
     z_ready: () => withPage('z_ready', root => { asGroup(root); dropSection(root, 'In the first tastes');
-      swapSection(root, 'What to do', callout('When these signs come together', 'Once you’ve seen all three, ask about starting at {p} 6-month checkup. Starting early won’t help {o} sleep any longer.')); }),
+      swapSection(root, 'What to do', callout('When these signs come together', 'Once you’ve seen all three, ask about starting at {p} 6-month checkup.')); }),
     z_iron: () => { const X = window.__fdx || {}, br = X.isBreast ? X.isBreast() : true, fam = X.formulaFam ? X.formulaFam() : false;
       if (!br) return withPage('z_iron', root => { asGroup(root); const c = cardAfter(root, 'What to do'); if (!c) return;
         const ps = [...c.querySelectorAll('p, li')].filter(x => !x.querySelector('p, li')), note = ps.find(p => p.querySelector('b')), main = ps.filter(p => p !== note).map(p => p.textContent.trim()).filter(Boolean);
@@ -220,7 +220,7 @@
       return page(head('drop', 'Iron', 'Iron matters before and after first foods', 'Babies who get mostly breast milk may need iron drops before food gives them enough.'),
         sect('What changes, and when', '', stageTiles([['vitd-drop', 'Before solids', 'pink', 'Ask about iron drops', 'Often from about 4 months. Timing and amount depend on {p} feeding and birth history.'], ['iron-meat', 'With first foods', 'green', 'Offer iron-rich foods', 'Iron-fortified cereal, soft meat or mashed beans.']]))
         + callout('Ask about {p} iron needs now', 'Especially if {s} arrived early. {P} pediatrician can tell you whether to give drops, how much, and when to stop.')
-        + sect('Good to know', '', textRows([['Don’t swap drops for a few bites', 'Keep following {p} pediatrician’s plan as foods start.'], fam && ['Also on formula?', 'Iron-fortified formula may already cover {p} needs. Ask if you’re unsure.'], ['Darker poop?', 'Iron can cause it. That’s common.']].filter(Boolean))), 'expect'); },
+        + sect('Good to know', '', textRows([['Keep up the drops', 'Even as foods start, until {p} pediatrician says to stop.'], fam && ['Also on formula?', 'Iron-fortified formula may already cover {p} needs. Ask if you’re unsure.'], ['Darker poop?', 'Iron can cause it. That’s common.']].filter(Boolean))), 'expect'); },
     z_plan: () => withPage('z_plan', root => { asGroup(root); const h = [...root.querySelectorAll('h2')].find(x => /differently/.test(x.textContent)); if (!h) return;
       const fig = h.nextElementSibling; let n = fig && fig.nextElementSibling; while (n && !n.matches('h2')) { const nx = n.nextElementSibling; n.remove(); n = nx; }
       fig.insertAdjacentHTML('afterend', checkCard([['Grapes and cherry tomatoes', 'Quarter them lengthwise.'], ['Hot dogs and sausages', 'Never in rounds. Cut into thin strips.'], ['Nuts and nut butter', 'No whole nuts. Spread nut butter thin.'], ['Hard raw fruit and veg', 'Cook or grate until soft.']])); }),
