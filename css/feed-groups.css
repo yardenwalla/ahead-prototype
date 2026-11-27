@@ -23,3 +23,21 @@
 #main .fd-al-t b{font-size:12.5px;font-weight:600;margin-top:4px;white-space:nowrap}
 #main .fd-al-t small{font-size:12px;line-height:1.3;color:#6b6573}
 #main .care-v2.fd-group .ss-do.fd-g-tips.is-plain{background:#fffdfa;border:1px solid #ece7e2}
+/* Nov 27: top card with the photo beside the words (Yarden's feeding inspiration) */
+#main .fd-group .fd-hero{position:relative;overflow:hidden;border-radius:26px;background:linear-gradient(135deg,#fbe4ec 0%,#fdf1ec 60%,#fbf6f1 100%);min-height:200px;margin:4px 0 22px}
+#main .fd-group .fd-hero-copy{position:relative;z-index:1;width:58%;padding:22px 0 22px 20px}
+#main .fd-group .fd-hero-eb{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9b4766}
+#main .fd-group .fd-hero h1{margin:0 0 8px;font-size:28px;line-height:1.12;color:#2b2733}
+#main .fd-group .fd-hero-copy p:last-child{margin:0;font-size:15px;line-height:1.45;color:#5e5a66}
+#main .fd-group .fd-hero-img{position:absolute;right:0;top:0;height:100%;width:50%;object-fit:cover;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 38%);mask-image:linear-gradient(to right,transparent 0,#000 38%)}
+/* The feed as a numbered timeline of small cards */
+#main .fd-group .fd-tl{list-style:none;margin:0 0 8px;padding:0;position:relative}
+#main .fd-group .fd-tl::before{content:"";position:absolute;left:13px;top:20px;bottom:20px;border-left:2px dashed #ecc3d2}
+#main .fd-group .fd-tl li{position:relative;display:flex;align-items:center;gap:10px;margin:0 0 10px}
+#main .fd-group .fd-tl-n{position:relative;z-index:1;flex:none;width:28px;height:28px;border-radius:50%;background:#c7739a;color:#fff;font-size:14px;font-weight:700;display:grid;place-items:center}
+#main .fd-group .fd-tl-card{flex:1;display:flex;align-items:center;gap:14px;padding:12px 14px;background:#fffdfa;border:1px solid #ece7e2;border-radius:18px}
+#main .fd-group .fd-tl-ic{flex:none;width:48px;height:48px;border-radius:50%;background:#fbe4ec;display:grid;place-items:center;padding:11px;box-sizing:border-box}
+#main .fd-group .fd-tl-ic svg{width:100%;height:100%}
+#main .fd-group .fd-tl b{display:block;font-size:16px;color:#2b2733}
+#main .fd-group .fd-tl small{display:block;font-size:13.5px;line-height:1.4;color:#5e5a66;margin-top:2px}
+#main .fd-group .fd-two .ph-grid{grid-template-columns:1fr 1fr}
