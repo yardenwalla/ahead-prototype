@@ -251,23 +251,22 @@
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',
           T.photoSwitch([['Smooth', 'Around 6 months'], ['Lumpy', '7–8 months'], ['Soft pieces', '9 months on']],
             [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']]], now))
-        + sect('Finger foods to try', 'Strips about as long as your finger, so {s} can hold them.',
+        + sect('Finger foods to try', 'Soft pieces {s} can pick up and hold.',
           T.photoGridMore(nine ? [['feeding/pieces-9', 'Banana, avocado, egg', 'Ripe, or well cooked'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin']]
             : [['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']], 'See more foods'))
-        + sect('Check the texture', '', rowsCard([['hand', 'The squish test', 'Pieces should squash easily between your finger and thumb.'], ['bowl', 'Mash with a fork', 'Not a blender, so a few lumps stay in.'], ['shield', 'Change round shapes', 'Quarter grapes and cherry tomatoes lengthwise.']]))); },
+        + `<section class="fd-squish"><div class="fd-sq-top"><div><em>${F('Before you serve')}</em><b>${F('The squish test')}</b><p>${F('Press a piece. It should flatten easily.')}</p></div><svg viewBox="0 0 96 40" width="96" height="40" aria-hidden="true"><rect x="4" y="6" width="30" height="28" rx="7" fill="#9fae6b"/><path d="M42 20h16m-5-5 5 5-5 5" stroke="#9b4766" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="78" cy="22" rx="15" ry="7" fill="#9fae6b"/></svg></div><small>${F('Fork-mash for lumps. Quarter round foods lengthwise.')}</small></section>`); },
     g_meal: () => { const T = H().TPLB, milk = ['Milk before or after meals, whichever suits {p} mood.', 'Water from a cup with meals, 4–8 oz a day at most.', 'Milk eases off slowly as meals grow, mostly after 9 months.'];
       if (mo() >= 8.5) return withPage('z_meal', root => addBefore(root, tips('Milk and water', milk)));
       const lead = sections('z_meal')._lead;
       return page(head('highchair', 'A meal, start to finish', 'First meals are just a few bites', 'Milk is still {p} main food. Let {o} set the pace.'),
         sect('What a meal looks like', '', `<div class="ct-page is-howto">${lead}</div>`)
         + sect('The simple flow', '', T.photoGrid([['feeding/meal-1', '1. Sit {o} up', 'Strapped in, facing you'], ['feeding/meal-2', '2. Offer a little', 'A spoonful, or a soft strip'], ['feeding/meal-3', '3. Let {o} lead', 'Done when {s} {turn|turns} away']]))
-        + sect('Good to know', '', doCard([['Pick a calm time, not a hungry one.', 1], ['Milk can come before or after the meal.']]))
-        + callout('Expect this', 'Mess, funny faces and food pushed back out with the tongue are common at first. It fades with practice.')); },
+        + tips('Good to know', ['Pushing food out with the tongue is common at first. It fades.', 'Pick a calm time, not a hungry one.', 'Expect mess. Most lands on the tray.', 'Milk can come before or after the meal.'])); },
     g_all: () => { const T = H().TPLB, X = window.__fdx, b = X && X.isBreast ? X.isBreast() : true, f = X && X.formulaFam ? X.formulaFam() : false, thin = !b ? 'formula' : f ? 'breast milk or formula' : 'breast milk';
       return page(head('peanut', 'Common allergens', 'Try the common allergens early', 'Start around 6 months. Ask first if {s} has severe eczema or an egg allergy.'),
         sect('The 9 common allergens', 'Try one at a time. Each photo shows one safe way to serve it.', alPhotos())
         + sect('How to introduce', '', window.ctPhotoSteps([['photo:feeding/pb-spoon', 'A little smooth peanut butter', 'About ½ teaspoon. Never whole nuts'], ['photo:feeding/pb-thin', 'Thin it', 'With warm water or ' + thin + ', until runny'], ['photo:feeding/pb-offer', 'Offer it at home', 'Early in the day, so you can watch']], [['Egg works the same way', 'Well cooked, never runny']]))
-        + callout('Keep them coming', 'Once {s’s} had one, offer it a few times a week. Peanut stirred into oatmeal, egg baked into pancakes.')
+        + tips('Keep them coming', ['A few times a week once {s’ve} had it.', 'Peanut stirred into oatmeal, egg baked into pancakes.'])
         + T.calls({ ped: 'a few hives, or vomiting, after a new food.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or {s’s} very sleepy or floppy.' })); }
   };
   const base = window.changesRoute;

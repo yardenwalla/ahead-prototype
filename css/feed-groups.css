@@ -301,3 +301,11 @@
 #main .care-v2.fd-group .fd-numic .fd-list-r:nth-child(1) .fd-list-ic{background:#e6f5ec}
 #main .care-v2.fd-group .fd-numic .fd-list-r:nth-child(2) .fd-list-ic{background:#e7effc}
 #main .care-v2.fd-group .fd-numic .fd-list-r:nth-child(3) .fd-list-ic{background:#fff3dc}
+#main .fd-group .fd-squish{background:#fbe4ec;border-radius:20px;padding:16px 18px 12px;margin:4px 0 16px}
+#main .fd-group .fd-sq-top{display:flex;align-items:center;gap:12px;justify-content:space-between}
+#main .fd-group .fd-squish em{display:block;font-style:normal;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9b4766;margin-bottom:4px}
+#main .fd-group .fd-squish b{display:block;font-size:17px;color:#2b2733}
+#main .fd-group .fd-squish p{margin:3px 0 0;font-size:14.5px;line-height:1.4;color:#3d3945}
+#main .fd-group .fd-squish svg{flex:none}
+#main .fd-group .fd-squish small{display:block;border-top:1px solid #f0cbd8;margin-top:12px;padding-top:10px;font-size:13.5px;color:#5e5a66}
+#main .fd-group .fd-squish .fd-sq-top > svg{width:96px!important;height:40px!important}
