@@ -331,35 +331,27 @@
         sect('What matters most today', '', doCard([['Offer breast milk or formula more often, in smaller amounts.']]))
         + sect('Make feeds a little easier', '', rowsCard([['drop', 'Clear a stuffy nose', 'Saline drops, then gentle suction, before feeds.'], ['heart', 'Watch energy and diapers', 'Can {s} stay awake to feed? Are wet diapers still happening?']]))
         + T.calls({ ped: realMo() < 3 ? 'fewer wet diapers, or vomiting that keeps happening.' : 'fewer wet diapers, vomiting that keeps happening, or a fever over a day or ' + (realMo() < 6 ? '101' : '103') + '°F.', ...feverCall(), now: 'trouble breathing, or {s’s} very hard to wake.', nowLabel: 'Call 911' }), 'expect'); },
-    x_tough: () => { const X = window.__fdx || {}; if (!(X.stg && X.stg() >= 3)) return withPage('x_tough', root => { asGroup(root);
-        const ttl = root.querySelector('.dev-area-head h1'); if (ttl) ttl.textContent = F('Common feeding worries, and what helps');
-        const lead = root.querySelector('.hub-lead'); if (lead) lead.textContent = F('Find what you’re seeing, then the right next step.');
-        const grid = root.querySelector('.fdt-grid'); if (grid) grid.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('What’s happening?')}</h2>`);
-        const first = root.querySelector('.fdt-row'); if (first) first.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('Other common challenges')}</h2>`);
-        const more = root.querySelector('details.fdt-more'); if (more) { const rows = [...more.querySelectorAll('.fdt-row')]; rows.forEach(r => more.parentNode.insertBefore(r, more)); more.remove(); }
-        if (window.__hubV) { const X2 = window.__fdx || {}, nurse = X2.nurses && X2.nurses(), go = id => id.includes(':') ? `openPage('${id}')` : `openPage('chg:${CAT}:mock:${id}')`;
-          const groups = [['During feeds', 'pink', [['x_refuse', 'Pulling away', 'Stops mid-feed'], nurse && ['x_nobottle', 'Bottle refusal', 'Won’t take it'], nurse && ['x_hurt', 'Feeding hurts', 'Painful latch']].filter(Boolean)],
-            ['Tummy and diapers', 'sun', [['x_spit', 'Spit-up', 'Milk comes back'], ['x_gas', 'Gas or fussing', 'Squirming, crying'], ['chg:Daily rhythm:d:look:1:poop', 'Poop changes', 'Color, texture']]],
-            ['Other worries', 'lav', [['x_gain', 'Weight gain', 'Growth pattern'], ['chg:Sleep:d:crying', 'Crying a lot', 'Hard to settle'], ['x_allergy', 'Milk allergy?', 'Signs to check']]]];
-          if (window.__hubV === 'two') { const ICON = { x_gain: 'steth', 'chg:Sleep:d:crying': 'moon', x_allergy: 'star' }, SUB = { x_gain: 'What helps, and what gets checked', 'chg:Sleep:d:crying': 'What helps, and when it eases', x_allergy: 'Blood in poop, a rash, or vomiting' };
-            const two = `<div class="fd-cols3 is-two">${groups.slice(0, 2).map(([g, tone, xs]) => `<section class="is-${tone}"><em>${F(g)}</em>${xs.map(([id, t, sub]) => `<button onclick="${go(id)}"><span><b>${F(t)}</b><small>${F(sub)}</small></span></button>`).join('')}</section>`).join('')}</div>`;
-            const rows = `<h2 class="hub-h2">${F('Other worries')}</h2>` + rowsCard(groups[2][2].map(([id, t]) => [ICON[id], t, SUB[id]])).replace(/<div class="fd-list-r">/g, () => '<div class="fd-list-r">');
-            const grid = root.querySelector('.fdt-grid'); [...root.querySelectorAll('h2')].filter(h => /What’s happening|Other common/.test(h.textContent)).forEach(h => h.remove());
-            root.querySelectorAll('.fdt-row').forEach(r => r.remove()); if (grid) grid.outerHTML = two + rows;
-            const box = root.querySelectorAll('.fd-list'); const last = box[box.length - 1]; if (last) [...last.querySelectorAll('.fd-list-r')].forEach((r, k) => { const id = groups[2][2][k][0]; r.setAttribute('onclick', go(id)); r.style.cursor = 'pointer'; r.insertAdjacentHTML('beforeend', '<span class="hub-chev" aria-hidden="true">›</span>'); });
-            const ttl = root.querySelector('.dev-area-head h1'); if (ttl) ttl.textContent = F('What are you noticing?'); return; }
-          const html = window.__hubV === 'chips' ? groups.map(([g, tone, xs]) => `<h2 class="hub-h2">${F(g)}</h2><div class="fd-chips is-${tone}">${xs.map(([id, t]) => `<button onclick="${go(id)}">${F(t)} <span>›</span></button>`).join('')}</div>`).join('')
-            : `<div class="fd-cols3">${groups.map(([g, tone, xs]) => `<section class="is-${tone}"><em>${F(g)}</em>${xs.map(([id, t]) => `<button onclick="${go(id)}"><b>${F(t)}</b></button>`).join('')}</section>`).join('')}</div>`;
-          const grid = root.querySelector('.fdt-grid'); const hs = [...root.querySelectorAll('h2')].filter(h => /What’s happening|Other common/.test(h.textContent)); hs.forEach(h => h.remove());
-          root.querySelectorAll('.fdt-row').forEach(r => r.remove()); if (grid) grid.outerHTML = html;
-          const ttl = root.querySelector('.dev-area-head h1'); if (ttl) ttl.textContent = F('What are you noticing?'); return; }
-        hubPolish(root, { 'Spitting up': ['Spit-up', 'After feeds'], 'Gassy or fussy': ['Gas and fussing', 'Discomfort around feeds'], 'Pulling away or refusing': ['Pulling away', 'Feeds aren’t going smoothly'], 'Poop looks different': ['Poop changes', 'Color, texture or constipation'] }); });
-      return withPage('x_tough', root => { asGroup(root); const ttl = root.querySelector('.dev-area-head h1, .dev-area-head h2, .hub-title'); if (ttl) ttl.textContent = F('Common mealtime worries, and what helps');
-        const lead = root.querySelector('.hub-lead'); if (lead) lead.textContent = F('Find what you’re seeing, then the right next step.');
-        const ren = { 'Gagging': ['Gagging or choking', 'Know the difference, and what to do'], 'Refusing food': ['Refusing food', 'Turning away, or eating less'], 'A rash after a new food': ['A rash after food', 'Spot a possible reaction'], 'Constipation': ['Constipation', 'When new foods change poop'] };
-        const grid = root.querySelector('.fdt-grid'); if (grid) grid.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('What’s happening?')}</h2>`);
-        const row = root.querySelector('.fdt-row'); if (row) row.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('Other common challenges')}</h2>`);
-        hubPolish(root, ren); const calls = root.querySelector('.care-tpl.is-urgent'); if (calls) calls.outerHTML = `<div class="care-tpl is-urgent">${H().TPLB.calls({ ped: 'fewer wet diapers, or a fever over a day or 103°F.', er: 'green or bloody vomit.', now: 'trouble breathing, or a severe reaction.', nowLabel: 'Call 911' })}</div>`; }); },
+    // Nov 27 (Yarden): two grouped columns, then "Other worries" as rows, then When to call. Same layout at every stage.
+    x_tough: () => { const X = window.__fdx || {}, solids = X.stg && X.stg() >= 3, nurse = X.nurses && X.nurses(), T = H().TPLB;
+      const go = id => id.includes(':') ? `openPage('${id}')` : `openPage('chg:${CAT}:mock:${id}')`;
+      const cols = solids
+        ? [['At meals', 'pink', [['z_gag', 'Gagging or choking', 'Know the difference'], ['z_refuse', 'Refusing food', 'Turns away, eats less']]],
+           ['Tummy and skin', 'sun', [['z_reaction', 'A rash after food', 'Spot a reaction'], ['chg:Daily rhythm:d:look:3:poop', 'Constipation', 'After new foods']]]]
+        : nurse
+        ? [['During feeds', 'pink', [['x_refuse', 'Pulling away', 'Stops mid-feed'], ['x_hurt', 'Feeding hurts', 'Painful latch'], ['x_nobottle', 'Bottle refusal', 'Won’t take one']]],
+           ['Tummy and diapers', 'sun', [['x_spit', 'Spit-up', 'Milk comes back'], ['x_gas', 'Gas or fussing', 'Squirming, crying'], ['chg:Daily rhythm:d:look:1:poop', 'Poop changes', 'Color or texture']]]]
+        : [['During feeds', 'pink', [['x_refuse', 'Pulling away', 'Stops mid-feed'], ['x_gas', 'Gas or fussing', 'Swallowed air']]],
+           ['Tummy and diapers', 'sun', [['x_spit', 'Spit-up', 'Milk comes back'], ['chg:Daily rhythm:d:look:1:poop', 'Poop changes', 'Color or texture']]]];
+      const rows = solids
+        ? [['z_teeth', 'tooth', 'Teething and meals', 'Sore gums, shorter feeds'], ['z_sick', 'thermo', 'Sick, or a stuffy nose', 'Feeding when {s’s} unwell']]
+        : [['x_gain', 'steth', 'Weight gain', 'What helps, and what gets checked'], ['chg:Sleep:d:crying', 'moon', 'Crying a lot', 'What helps, and when it eases'], ['x_allergy', 'star', 'Could it be a milk allergy?', 'Blood in poop, a rash, or vomiting']];
+      const m = realMo(), calls = solids
+        ? T.calls({ ped: 'fewer wet diapers, or a fever over a day or 103°F.', er: 'green or bloody vomit.', now: 'trouble breathing, or a severe reaction.', nowLabel: 'Call 911' })
+        : T.calls({ ped: 'fewer wet diapers, or too sleepy to feed' + fevTail() + '.', ...feverCall(), er: 'green or bloody vomit.' });
+      const colsHtml = `<div class="fd-cols3 is-two">${cols.map(([g, tone, xs]) => `<section class="is-${tone}"><em>${F(g)}</em>${xs.map(([id, t, sub]) => `<button onclick="${go(id)}"><span><b>${F(t)}</b><small>${F(sub)}</small></span></button>`).join('')}</section>`).join('')}</div>`;
+      const rowsHtml = `<section class="fd-list">${rows.map(([id, icon, t, x]) => `<div class="fd-list-r" role="button" style="cursor:pointer" onclick="${go(id)}"><span class="fd-list-ic">${ic(icon)}</span><div><b>${F(t)}</b><span>${F(x)}</span></div><span class="hub-chev" aria-hidden="true">›</span></div>`).join('')}</section>`;
+      return page(head('heart', 'Feeding challenges', 'What are you noticing?', 'Find what you’re seeing, then the right next step.'),
+        colsHtml + `<h2 class="hub-h2">${F('Other worries')}</h2>` + rowsHtml + calls, 'expect'); },
     // Nov 27 (Yarden's mockups): bottle refusal and refusing food.
     x_nobottle: () => { const X = window.__fdx || {}; if (!(X.nurses && X.nurses()) || mo() >= 11) return window.changesRoute('chg:' + CAT + ':mock:x_nobottle'); const T = H().TPLB;
       return page(head('bottle', 'Feeding challenges', 'Won’t take a bottle? It often takes practice', 'Many babies who nurse need time to get used to a bottle. Keep it low-pressure.'),
