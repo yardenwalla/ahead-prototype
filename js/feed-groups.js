@@ -196,7 +196,7 @@
     return page(top, body, 'howto'); };
   // Nov 27 (Yarden's mockup): "Using expressed milk".
   const bmPage = () => { const T = H().TPLB;
-    const steps = [['bm-oldest', 'Oldest first', 'From the fridge, or thawed frozen milk.'], ['bm-swirl', 'Swirl gently', 'The cream layer is common.'], ['bm-warm', 'Warm or cool', 'Test a few drops on your wrist.']];
+    const steps = [['bm-oldest', 'Oldest first', 'From the fridge, or thawed frozen milk.'], ['bm-swirl2', 'Swirl gently', 'The cream layer is common.'], ['bm-warm', 'Warm or cool', 'Test a few drops on your wrist.']];
     const table = `<section class="fd-tbl2"><div class="is-h">${F('Milk')}</div><div class="is-h">${F('Counter')}</div><div class="is-h">${F('Fridge')}</div><div class="is-h">${F('Freezer')}</div><b>${F('Fresh')}</b><div>${F('4 hrs')}</div><div>${F('4 days')}</div><div>${F('6 mo')}<small>${F('best')}</small></div><b>${F('Thawed')}</b><div>${F('1–2 hrs')}</div><div>${F('24 hrs')}</div><div>${F('Never')}<small>${F('refreeze')}</small></div></section>`;
     return page(head('bottle', 'Bottles · How to', 'Using pumped milk', 'Make a bottle, check storage times, and clean up, all in one place.'),
       sect('Get a bottle ready', '', `<section class="fd-bm"><div class="fd-bm-3">${steps.map(([img, t, x], k) => `<div><span class="fd-fm-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"><i>${k + 1}</i></span><b>${F(t)}</b><small>${F(x)}</small></div>`).join('')}</div><p class="fd-pnote"><b>${F('Never microwave.')}</b> ${F('It heats unevenly and can burn.')}</p></section>`)
