@@ -484,3 +484,7 @@
 #main .fd-group .fd-fm-grid.is-3{grid-template-columns:repeat(3,1fr);gap:8px}
 #main .fd-group .fd-fm-grid.is-3 .fd-fm-step b{font-size:14px}#main .fd-group .fd-fm-grid.is-3 .fd-fm-step small{font-size:12.5px}
 #main .fd-group .fd-fm-grid.is-3 .fd-fm-step b{font-size:13.5px;line-height:1.25}
+/* challenge columns: lavender and sun, so the first column doesn't blend into the pink top card */
+#main .fd-group .fd-cols3.is-two .is-pink{background:#efedf8}
+#main .fd-group .fd-cols3.is-two .is-pink em{color:#5e5694}
+#main .fd-group .fd-cols3.is-two .is-sun em{color:#8a6a2a}
