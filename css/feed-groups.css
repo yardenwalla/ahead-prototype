@@ -367,3 +367,5 @@
 #main .fd-group .fd-match > div > span{background:#fbe4ec;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:600;line-height:1.3;color:#2b2733}
 #main .fd-group .fd-match em{display:block;font-style:normal;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9b4766;margin-bottom:3px}
 #main .fd-group .fd-match b{display:block;font-size:15px;color:#2b2733}#main .fd-group .fd-match small{display:block;font-size:13.5px;line-height:1.4;color:#5e5a66;margin-top:2px}
+#main .fd-group .fd-match .fd-m-img{float:right;width:52px;height:52px;border-radius:12px;overflow:hidden;margin:0 0 4px 8px}
+#main .fd-group .fd-match .fd-m-img img{width:100%;height:100%;object-fit:cover;display:block}
