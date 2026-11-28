@@ -166,6 +166,27 @@
   const stageTiles = xs => `<div class="fd-stiles">${xs.map(([img, pill, tone, t, x]) => `<section><span class="fd-st-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"></span><em class="is-${tone}">${F(pill)}</em><b>${F(t)}</b><small>${F(x)}</small></section>`).join('')}</div>`;
   const textRows = rows => `<section class="fd-list fd-trows">${rows.map(([t, x]) => `<div class="fd-list-r"><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
   const cardAfter = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); return h && h.nextElementSibling; };
+  // Nov 27 (Yarden's mockup): formula families get one page, start to finish, instead of four steps. The type switch
+  // changes only the making steps; storage and cleaning are the same for every type.
+  const fmPage = () => { const X = window.__fdx || {}, br = X.isBreast ? X.isBreast() : false;
+    const card = (img, n, t, x) => `<section class="fd-fm-step"><span class="fd-fm-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"><i>${n}</i></span><b>${F(t)}</b><small>${F(x)}</small></section>`;
+    const tabs = [['rtf', 'Ready-to-feed'], ['powder', 'Powder'], ['conc', 'Concentrate']];
+    const make = {
+      powder: ['Make a powder bottle', 'Follow the water and powder amounts on the label exactly. Never water it down.', card('formula-1', 1, 'Start clean', 'Wash your hands, and use a clean bottle and counter.') + card('formula-water', 2, 'Water first', 'Boiled and cooled about 5 minutes, to the line the label says.') + card('formula-scoop', 3, 'Then level scoops', 'The exact number. Flat, never heaped. Then shake.') + card('formula-4', 4, 'Test on your wrist', 'Warm, never hot.')],
+      conc: ['Make a concentrate bottle', 'Mix with water exactly as the label says. Never water it down.', card('formula-1', 1, 'Start clean', 'Wash your hands, and use a clean bottle and counter.') + card('formula-water', 2, 'Water, then concentrate', 'Boiled and cooled water, then the concentrate, as the label says. Swirl.') + card('formula-4', 3, 'Test on your wrist', 'Warm, never hot.')],
+      rtf: ['Pour a ready-to-feed bottle', 'No water, no mixing. The easiest at 3 am, and the safest for young babies.', null] };
+    const rtfRows = rowsCard([['hand', 'Start clean', 'Wash your hands, and use a clean bottle.'], ['bottle', 'Shake and pour', 'Pour what {s} usually {take|takes}, and feed it as it is.'], ['clock', 'Opened bottle or carton?', 'Cap it, keep it in the fridge, and use it by the time on the label.']]);
+    const alert = `<section class="fd-alert"><span>!</span><div><b>${F('Extra care for young or premature babies')}</b><p>${F('Powder isn’t sterile. Under 2 months or born early, boil the water first, and ready-to-feed is safest. Ask your pediatrician if your tap water is safe.')}</p></div></section>`;
+    const top = head('bottle', 'Bottles · How to', 'Formula, start to finish', 'Make a bottle safely, know how long it keeps, and clean up afterward.');
+    const body = `<div class="fd-fm" data-t="powder"><h2 class="hub-h2">${F('Which type are you using?')}</h2><div class="fd-seg">${tabs.map(([k, l]) => `<button class="is-${k}" onclick="this.closest('.fd-fm').dataset.t='${k}'">${F(l)}</button>`).join('')}</div>`
+      + `<p class="fd-g-lead">${F('Any standard, iron-fortified formula works, and switching brands is fine. Ask before a special formula.')}</p>`
+      + Object.entries(make).map(([k, [t, line, cards]]) => `<div class="fd-fm-t is-${k}"><h2 class="hub-h2">${F(t)}</h2><p class="fd-g-lead">${F(line)}</p>${cards ? `<div class="fd-fm-grid">${cards}</div>${k === 'powder' ? alert : ''}` : rtfRows}</div>`).join('')
+      + `</div>`
+      + sect('How long it keeps', '', `<div class="fd-keep"><section class="is-pink"><b>2 h</b><span>${F('After mixing')}</span><small>${F('At room temperature')}</small></section><section class="is-blue"><b>24 h</b><span>${F('In the fridge')}</span><small>${F('If chilled right away')}</small></section><section class="is-green"><b>1 h</b><span>${F('Once a feed starts')}</span><small>${F('Then toss what’s left')}</small></section></div>`)
+      + `<p class="fd-pnote is-plain"><b>${F('Remember:')}</b> ${F('Don’t reuse leftovers or microwave a bottle. Warm it in a bowl of warm water. Out and about? Carry powder and water separately.')}${br ? ' ' + F('Breast milk keeps longer: 4 hours out, 4 days in the fridge.') : ''}</p>`
+      + sect('Clean after every feed', '', `<ol class="fd-three is-clean"><li><em class="fd-three-ic">${ic('hand')}</em><b>${F('1. Take apart')}</b><span>${F('Bottle, nipple, ring, and any valves.')}</span></li><li><em class="fd-three-ic">${ic('drop')}</em><b>${F('2. Wash')}</b><span>${F('Hot, soapy water in a separate basin, or the dishwasher.')}</span></li><li><em class="fd-three-ic">${ic('sun')}</em><b>${F('3. Air-dry')}</b><span>${F('On a clean rack. Don’t towel-dry.')}</span></li></ol>`)
+      + callout('Sanitize once a day for now', 'Boil 5 minutes, steam, or use a sanitize cycle. Most important under 2 months, or if born early.');
+    return page(top, body, 'howto'); };
   const NB = {
     // v3 (Yarden: liked the befores; her mockups): the befores, with a tighter night chart, icon rows for what to do,
     // and the early-weeks-only "hard to wake" callout.
@@ -280,6 +301,7 @@
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) { const q = String(r).split(':');
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'xa' && q[4] === 'feed' && window.__hub && !window.__fdIn) { window.__fdLast = r; return nbFeed(); }
+    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'xa' && /^prep/.test(q[4] || '') && window.__hub && !window.__fdIn && window.__fdx && window.__fdx.formulaFam && window.__fdx.formulaFam()) { window.__fdLast = r; return fmPage(); }
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && NB[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = NB[q[3]](); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && G[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = G[q[3]](q[4]); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     return base.call(this, r, ...a); };
