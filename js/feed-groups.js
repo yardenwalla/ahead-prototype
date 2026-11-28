@@ -359,6 +359,10 @@
         + sect('What helps', '', rowsCard([['snow', 'Chill a teether', 'Or a washcloth, to chew on.'], m >= 6 ? ['bowl', 'Serve chilled food', 'Cool yogurt or mashed fruit soothes gums.'] : ['hand', 'Rub {p} gums', 'With a clean finger, for a minute or two.'], ['clock', 'Try shorter feeds', 'More often, until {p} gums settle.']]))
         + callout('Skip numbing gels and amber necklaces', 'Neither is safe for babies.')
         + T.calls({ ped: 'refusing to drink' + fevTail() + '.', ...feverCall() }), 'expect'); },
+    nb_vitd: () => withPage('nb_vitd', root => { asGroup(root);
+      const n = [...root.querySelectorAll('.tpl-notes li, .tpl-notes p, p')].find(x => /No water yet/.test(x.textContent) && x.querySelector('b'));
+      if (n) { const card = n.closest('section, .ph-rowcard, .tpl-card') || n.parentNode; const ul = n.closest('.tpl-notes'); (ul && ul.children.length === 1 ? ul : n).remove();
+        card.insertAdjacentHTML('afterend', callout('No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days.')); } }),
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',
