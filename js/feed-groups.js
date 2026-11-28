@@ -235,17 +235,22 @@
       const ren = { 'Get help': 'Call 911', '5 back blows': 'Give 5 back blows', '5 chest thrusts': 'Give 5 chest thrusts' };
       root.querySelectorAll('.ct-steps2 b').forEach(b => { const n = [...b.childNodes].find(x => x.nodeType === 3 && x.textContent.trim()); if (n && ren[n.textContent.trim()]) n.textContent = ren[n.textContent.trim()]; });
       root.querySelectorAll('b').forEach(b => { if (b.textContent.trim() === 'Foods to wait on') { const sm = b.parentNode.querySelector('small'); if (sm) sm.textContent = F('Foods that need a safer shape'); } }); }),
-    // Nov 27 (Meals, Yarden's inspiration): keep the photos and the week chart; rows rotate colors; one pink callout each.
+    // Nov 27 (Meals, Yarden's own mockups): the photos and the week chart stay; rows carry the extra lines.
     z_meal: () => withPage('z_meal', root => { asGroup(root);
-      swapSection(root, 'What to do', rowsCard([['hand', '{S} {feed|feeds} {o}self', 'Fingers first, and a spoon to practice.'], ['bowl', 'Same food, safer shape', 'Soft pieces {s} can squash, sized for {p} skills.']])
-        + callout('Share from your plate', 'Take out {p} portion before adding salt.'), 'What to do'); }),
+      swapSection(root, 'What to do', rowsCard([['bowl', 'Share from your plate', 'Take out {p} portion before adding salt. Make sure it’s soft and easy to mash.'], ['hand', 'Let {o} feed {o}self', 'Fingers first, with a spoon to practice. Expect some mess.']]), 'What to do'); }),
     z_day: () => withPage('z_day', root => { asGroup(root);
-      swapSection(root, 'What to do', callout('Your job, {p} job', 'You offer what and when. {S} decides whether, and how much. No coaxing, bribes or extra bites.')
-        + rowsCard([['heart', 'Pair new with familiar', 'Something {s} likes, next to something new.'], ['diaper', 'Getting enough?', 'Wet diapers, energy, and steady growth at checkups.']]), 'What to do'); }),
-    z_milk12: () => withPage('z_milk12', root => { asGroup(root); const X = window.__fdx || {}, nurseOnly = X.nurses && X.nurses() && !(X.formulaFam && X.formulaFam());
-      swapSection(root, 'What to do', numIcons([[ic('cup'), 'Practice cups now', 'An open or straw cup, alongside meals.'], [ic('bottle'), 'From 12 months', 'Whole milk from a cup, not low-fat until 2. Up to 24 oz a day.'],
-          nurseOnly ? [ic('heart'), 'Nurse as usual', 'Nursing can carry on as long as you both like.'] : [ic('bottle'), 'Phase out bottles', 'Gradually, between 12 and 18 months.']])
-        + callout('Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}.'), 'See how it works'); }),
+      const wk = root.querySelector('.tpl-week'); if (wk) wk.innerHTML = wk.innerHTML.replace('not the day', 'not one meal');
+      swapSection(root, 'What to do', rowsCard([['heart', 'Offer, then let {o} decide', 'No coaxing, bribes, or extra bites.'], ['bowl', 'Pair new with familiar', 'Something {s} likes next to something new.'], ['diaper', 'Getting enough?', 'Wet diapers, energy, and steady growth at checkups.']]), 'What helps'); }),
+    z_milk12: () => withPage('z_milk12', root => { asGroup(root); const X = window.__fdx || {}, nurseOnly = X.nurses && X.nurses() && !(X.formulaFam && X.formulaFam()), m = Math.floor(mo());
+      const lead = root.querySelector('.hub-lead'); if (lead && m < 12) lead.textContent = F('A little cup practice now makes the switch easier.');
+      swapSection(root, 'What to do', `<div class="fd-twot"><section class="is-lav"><em>${F(m < 12 ? 'Now · ' + m + ' months' : 'Every day')}</em><b>${F('Practice with a cup')}</b><small>${F('Small sips of water from an open or straw cup, alongside meals.')}</small></section>`
+        + `<section class="is-peach"><em>${F('From 12 months')}</em><b>${F('Whole milk can start')}</b><small>${F('From a cup, not low-fat until 2. ' + (nurseOnly ? 'Nursing can carry on if you like.' : 'Phase out bottles between 12 and 18 months.'))}</small></section></div>`
+        + `<p class="fd-pnote"><b>${F('Good to know.')}</b> ${F('Keep cow’s milk to about 24 oz a day at most. Ask your pediatrician about vitamin D after age 1.')}</p>`, 'How it changes'); }),
+    fd_day: () => { const X = window.__fdx || {}; if (!(X.stg && X.stg() === 4)) return window.changesRoute('chg:' + CAT + ':mock:fd_day');
+      const parts = [['sun', 'Morning', [['7 am', 'milk'], ['8 am', 'breakfast']]], ['clock', 'Midday', [['10 am', 'snack'], ['12 pm', 'lunch, water from a cup'], ['1 pm', 'milk before a nap']]], ['bowl', 'Afternoon', [['3:30 pm', 'snack']]], ['moon', 'Evening', [['5:30 pm', 'dinner'], ['7 pm', 'milk before bed']]]];
+      return page(head('clock', 'Example day', 'Meals and milk fit together', 'One possible day at 9–12 months, not a schedule to follow.'),
+        sect('A day in four parts', '', `<ol class="fd-day4">${parts.map(([icon, t, xs]) => `<li><span class="fd-d4-ic">${ic(icon)}</span><div><b>${F(t)}</b><span>${xs.map(([h, x]) => `<strong>${h}</strong> ${F(x)}`).join(' · ')}</span></div></li>`).join('')}</ol>`)
+        + `<p class="fd-pnote"><b>${F('There’s room to flex.')}</b> ${F('Milk feeds and meals can move around naps, appetite, and your family’s routine.')}</p><p class="fd-fine">${F('Example timing only. {S} may eat at different times, or need more or fewer snacks.')}</p>`, 'expect'); },
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',

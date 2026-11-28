@@ -309,3 +309,20 @@
 #main .fd-group .fd-squish svg{flex:none}
 #main .fd-group .fd-squish small{display:block;border-top:1px solid #f0cbd8;margin-top:12px;padding-top:10px;font-size:13.5px;color:#5e5a66}
 #main .fd-group .fd-squish .fd-sq-top > svg{width:96px!important;height:40px!important}
+#main .fd-group .fd-twot{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
+#main .fd-group .fd-twot section{border-radius:18px;padding:14px 14px 16px}
+#main .fd-group .fd-twot .is-lav{background:#f3eff8}#main .fd-group .fd-twot .is-peach{background:#fdf0e8}
+#main .fd-group .fd-twot em{display:inline-block;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#fff;color:#9b4766;border-radius:999px;padding:3px 9px;margin-bottom:8px}
+#main .fd-group .fd-twot b{display:block;font-size:15.5px;color:#2b2733;margin-bottom:4px}
+#main .fd-group .fd-twot small{display:block;font-size:13px;line-height:1.45;color:#5e5a66}
+#main .fd-group .fd-pnote{background:#fbe4ec;border-radius:18px;padding:13px 16px;font-size:14px;line-height:1.5;color:#3d3945;margin:0 0 14px}
+#main .fd-group .fd-pnote b{color:#9b4766}
+#main .fd-group .fd-fine{font-size:12.5px;line-height:1.45;color:#7a7480;margin:0 4px 16px}
+#main .fd-group .fd-day4{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:10px;position:relative}
+#main .fd-group .fd-day4::before{content:"";position:absolute;left:17px;top:20px;bottom:20px;border-left:2px solid #f1d3de}
+#main .fd-group .fd-day4 li{display:flex;gap:12px;align-items:center}
+#main .fd-group .fd-d4-ic{flex:none;width:36px;height:36px;border-radius:50%;background:#fbe4ec;display:grid;place-items:center;position:relative;z-index:1}
+#main .fd-group .fd-d4-ic svg{width:20px;height:20px}
+#main .fd-group .fd-day4 li > div{flex:1;background:#fffdfa;border:1px solid #ece7e2;border-radius:16px;padding:12px 14px}
+#main .fd-group .fd-day4 b{display:block;font-size:15.5px;color:#2b2733;margin-bottom:3px}
+#main .fd-group .fd-day4 span{font-size:13.5px;line-height:1.45;color:#5e5a66}#main .fd-group .fd-day4 strong{color:#2b2733;font-weight:650}
