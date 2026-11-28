@@ -192,16 +192,16 @@
       + sect('Clean after every feed', '', `<ol class="fd-three is-clean"><li><em class="fd-three-ic">${ic('hand')}</em><b>${F('1. Take apart')}</b><span>${F('Bottle, nipple and ring.')}</span></li><li><em class="fd-three-ic">${ic('drop')}</em><b>${F('2. Wash')}</b><span>${F('In hot, soapy water, or the dishwasher.')}</span></li><li><em class="fd-three-ic">${ic('sun')}</em><b>${F('3. Air-dry')}</b><span>${F('On a rack, not a towel.')}</span></li></ol>`)
       + callout('Sanitize once a day for now', 'Boil 5 minutes, steam, or a sanitize cycle. Most important under 2 months.');
     return page(top, body, 'howto'); };
-  const bmPage = () => {
-    const top = head('bottle', 'Bottles · How to', 'Breast milk, start to finish', 'Get it ready, know how long it keeps, and clean up.');
-    const table = `<section class="fd-tbl"><div></div><div>${F('Counter')}</div><div>${F('Fridge')}</div><div>${F('Freezer')}</div><b>${F('Fresh')}</b><div>${F('4 hours')}</div><div>${F('4 days')}</div><div>${F('6 months')}</div><b>${F('Thawed')}</b><div>${F('1–2 hours')}</div><div>${F('24 hours')}</div><div>${F('Never refreeze')}</div></section>`;
-    return page(top, sect('Get it ready', '', rowsCard([['clock', 'Oldest first', 'From the fridge, or thawed in the fridge overnight.'], ['drop', 'Swirl gently', 'Layers are common.'], ['heart', 'Warm or cool', 'Test a few drops on your wrist.']]))
-      + `<section class="fd-alert"><span>!</span><div><b>${F('Never microwave')}</b><p>${F('It heats unevenly and can burn. A bowl of warm water works best.')}</p></div></section>`
-      + sect('How long it keeps', '', table)
-      + `<p class="fd-pnote is-plain"><b>${F('Once a feed starts,')}</b> ${F('finish within 2 hours. Freeze flat in 2–4 oz bags. Out and about, a cooler with ice packs keeps it 24 hours.')}</p>`
-      + sect('Clean after every feed', '', `<ol class="fd-three is-clean"><li><em class="fd-three-ic">${ic('hand')}</em><b>${F('1. Take apart')}</b><span>${F('Bottle parts, and pump parts too.')}</span></li><li><em class="fd-three-ic">${ic('drop')}</em><b>${F('2. Wash')}</b><span>${F('In hot, soapy water, or the dishwasher.')}</span></li><li><em class="fd-three-ic">${ic('sun')}</em><b>${F('3. Air-dry')}</b><span>${F('On a rack, not a towel.')}</span></li></ol>`)
-      + callout('Sanitize once a day for now', 'Boil 5 minutes, steam, or a sanitize cycle. Most important under 2 months.')
-      + `<p class="fd-lav"><b>${F('Every day:')}</b> ${F('vitamin D drops. If you ever add formula, any iron-fortified one works.')}</p>`, 'howto'); };
+  // Nov 27 (Yarden's mockup): "Using expressed milk".
+  const bmPage = () => { const T = H().TPLB;
+    const steps = [['bm-oldest', 'Oldest first', 'From the fridge, or thawed frozen milk.'], ['bm-swirl', 'Swirl gently', 'The cream layer is common.'], ['bm-warm', 'Warm or cool', 'Test a few drops on your wrist.']];
+    const table = `<section class="fd-tbl2"><div class="is-h">${F('Milk')}</div><div class="is-h">${F('Counter')}</div><div class="is-h">${F('Fridge')}</div><div class="is-h">${F('Freezer')}</div><b>${F('Fresh')}</b><div>${F('4 hrs')}</div><div>${F('4 days')}</div><div>${F('6 mo')}<small>${F('best')}</small></div><b>${F('Thawed')}</b><div>${F('1–2 hrs')}</div><div>${F('24 hrs')}</div><div>${F('Never')}<small>${F('refreeze')}</small></div></section>`;
+    return page(head('bottle', 'Bottles · How to', 'Using expressed milk', 'Make a bottle, check storage times, and clean up, all in one place.'),
+      sect('Get a bottle ready', '', `<section class="fd-bm"><div class="fd-bm-3">${steps.map(([img, t, x], k) => `<div><span class="fd-fm-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"><i>${k + 1}</i></span><b>${F(t)}</b><small>${F(x)}</small></div>`).join('')}</div><p class="fd-pnote"><b>${F('Never microwave.')}</b> ${F('It heats unevenly and can burn.')}</p></section>`)
+      + sect('How long milk keeps', '', table)
+      + `<p class="fd-pnote"><b>${F('Once {s} {start|starts} a bottle:')}</b> ${F('use what’s left within 2 hours after the feed ends.')}</p><p class="fd-g-lead">${F('Out and about? A cooler with frozen ice packs keeps milk cold for up to 24 hours.')}</p>`
+      + sect('Clean after every feed', '', `<section class="fd-clean3"><ol>${[['Take apart', 'Bottle, nipple, pump parts'], ['Wash', 'Hot, soapy water or dishwasher'], ['Air-dry', 'On a clean rack']].map(([t, x], k) => `<li><i>${k + 1}</i><b>${F(t)}</b><span>${F(x)}</span></li>`).join('')}</ol><p class="fd-foot2"><b>${F('Sanitize daily')}</b> ${F('if {s’s} under 2 months, born early, or has a weak immune system.')}</p></section>`)
+      + `<p class="fd-lav"><b>${F('Every day:')}</b> ${F('vitamin D drops.')}</p>`, 'howto'); };
   const NB = {
     // v3 (Yarden: liked the befores; her mockups): the befores, with a tighter night chart, icon rows for what to do,
     // and the early-weeks-only "hard to wake" callout.
@@ -285,7 +285,7 @@
       swapSection(root, 'What to do', `<div class="fd-twot is-ic"><section class="is-lav"><em>${F(m < 12 ? 'Now' : 'Every day')}</em><span class="fd-tw-ic">${ic('cup')}</span><b>${F('Practice with a cup')}</b><small>${F('Small sips of water from an open or straw cup, at meals.')}</small></section>`
         + `<section class="is-peach"><em>${F('At 12 months')}</em><span class="fd-tw-ic">${ic('bottle')}</span><b>${F('Whole milk can start')}</b><small>${F('From a cup, not low-fat, up to 24 oz a day.')}</small></section></div>`
         + callout('Good to know', (nurseOnly ? 'Nursing can carry on as long as you both like. ' : 'Phase out bottles between 12 and 18 months. ') + 'Ask your pediatrician about vitamin D after age 1.'), 'The transition at a glance'); }),
-    fd_day: () => { const X = window.__fdx || {}; if (!(X.stg && X.stg() === 4)) return window.changesRoute('chg:' + CAT + ':mock:fd_day');
+    fd_day: () => { const X = window.__fdx || {}; if (X.stg && X.stg() < 4) return G.fd_day_early(); if (!(X.stg && X.stg() === 4)) return window.changesRoute('chg:' + CAT + ':mock:fd_day');
       const parts = [['rot-oats', 'Morning', [['7 am', 'milk'], ['8 am', 'breakfast']]], ['plate-veg', 'Midday', [['10 am', 'snack'], ['12 pm', 'lunch'], ['', 'Water from a cup'], ['1 pm', 'milk before a nap']]], ['opt-banana', 'Afternoon', [['3:30 pm', 'snack']]], ['opt-pasta', 'Evening', [['5:30 pm', 'dinner'], ['7 pm', 'milk before bed']]]];
       return page(head('heart', 'Example day', 'A day at 9–12 months', 'An example, not a schedule. {S} {lead|leads}, and no two days look the same.'),
         sect('Example day', '', `<section class="fd-list fd-photorows fd-dayrows">${parts.map(([img, t, xs]) => `<div class="fd-list-r"><span class="fd-pr-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"></span><div><b>${F(t)}</b><span>${xs.map(([h, x]) => h ? `<strong>${h}</strong> ${F(x)}` : F(x)).join(' · ')}</span></div></div>`).join('')}</section>`)
@@ -359,10 +359,24 @@
         + sect('What helps', '', rowsCard([['snow', 'Chill a teether', 'Or a washcloth, to chew on.'], m >= 6 ? ['bowl', 'Serve chilled food', 'Cool yogurt or mashed fruit soothes gums.'] : ['hand', 'Rub {p} gums', 'With a clean finger, for a minute or two.'], ['clock', 'Try shorter feeds', 'More often, until {p} gums settle.']]))
         + callout('Skip numbing gels and amber necklaces', 'Neither is safe for babies.')
         + T.calls({ ped: 'refusing to drink' + fevTail() + '.', ...feverCall() }), 'expect'); },
-    nb_vitd: () => withPage('nb_vitd', root => { asGroup(root);
-      const n = [...root.querySelectorAll('.tpl-notes li, .tpl-notes p, p')].find(x => /No water yet/.test(x.textContent) && x.querySelector('b'));
-      if (n) { const card = n.closest('section, .ph-rowcard, .tpl-card') || n.parentNode; const ul = n.closest('.tpl-notes'); (ul && ul.children.length === 1 ? ul : n).remove();
-        card.insertAdjacentHTML('afterend', callout('No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days.')); } }),
+    nb_vitd: () => { const X = window.__fdx || {}, fam = X.formulaFam && X.formulaFam();
+      return page(head('drop', 'Vitamin D', 'Vitamin D drops, every day', 'Vitamin D helps build strong bones. Breast milk contains very little.'),
+        sect('How to give the drops', '', `<section class="fd-photo1"><img src="assets/feeding/vitd-drop.jpg" alt="" loading="lazy"><div><b>${F('Aim toward the inside of {p} cheek.')}</b><p>${F('Give it slowly, or mix the dose into a little milk {s} will finish.')}</p></div></section>`)
+        + sect('What {s} {need|needs}', '', rowsCard([['sun', 'Vitamin D · 400 IU a day', 'For breastfed and partly breastfed babies, from the first days.'], ['note', 'Check the product label', 'Strengths vary. Use the dropper it comes with.']]))
+        + sect('Also worth knowing', '', textRows([fam && ['Also on formula?', 'How much formula {s} {drink|drinks} can change whether drops are needed. Ask {p} pediatrician.'], ['Iron is a separate question', 'Drops often start around 4 months for breastfed babies. See the Iron guide.'], ['No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days.']].filter(Boolean))), 'expect'); },
+    // Example day, earlier stages (Yarden's mockups): four parts of the day, dots for feeds.
+    fd_day_early: () => { const X = window.__fdx || {}, st = X.stg ? X.stg() : 0;
+      if (st === 3) { const nurse = X.nurses && X.nurses(), milk = nurse ? (X.formulaFam && X.formulaFam() ? 'Nurse or a bottle' : 'Nurse') : 'A bottle';
+        const rows = [['7 am', 'm', 'Milk feed', milk], ['8 am', 'f', 'Breakfast', 'A few spoonfuls of an iron-rich food'], ['11 am', 'm', 'Milk feed', 'Before a nap'], ['3 pm', 'm', 'Milk feed', 'After waking'], ['5:30 pm', 'f', 'Dinner', 'Soft pieces of family food'], ['7 pm', 'm', 'Milk feed', 'Before bed']];
+        return page(head('heart', 'Example day · 6–9 months', 'A day at 6–9 months', 'Milk still matters, with a few first meals alongside it.'),
+          sect('One possible day', 'Milk feeds and meals shown together.', `<section class="fd-times">${rows.map(([t, k, b, x]) => `<div><em>${t}</em><i class="is-${k}"></i><span><b>${F(b)}</b><small>${F(x)}</small></span></div>`).join('')}</section><p class="fd-key"><i class="is-m"></i>${F('Milk')}<i class="is-f"></i>${F('Meal or snack')}</p>`)
+          + `<p class="fd-lav"><b>${F('An example, not a schedule.')}</b> ${F('Milk feeds and meals can move around naps and appetite.')}</p>`, 'expect'); }
+      const D = { 0: ['Example day · Newborn', 'A newborn day', 'Feeds around the clock. Evenings often bunch together.', [3, 2, 3, 3]], 1: ['Example day · 3–4 months', 'A day at 3–4 months', 'Feeds may spread out, with longer pauses between some of them.', [2, 3, 1, 1]], 2: ['Example day · 4–6 months', 'A day at 4–6 months', 'A more predictable rhythm may be emerging.', [2, 2, 1, 1]] }[st];
+      if (!D) return window.changesRoute('chg:' + CAT + ':mock:fd_day');
+      const parts = [['Morning', '6 am–noon'], ['Afternoon', 'Noon–6 pm'], ['Evening', '6 pm–midnight'], ['Overnight', 'Midnight–6 am']];
+      return page(head('heart', D[0], D[1], D[2]),
+        sect('One possible day', 'The dots are feeds, not exact clock times.', `<section class="fd-dots">${parts.map(([t, r], k) => `<div><span><b>${F(t)}</b><small>${F(r)}</small></span><span class="fd-dd"><span>${'<i></i>'.repeat(D[3][k])}</span>${st === 0 && k === 2 ? `<small>${F('Often close together')}</small>` : ''}</span><em>${D[3][k]} ${F(D[3][k] === 1 ? 'feed' : 'feeds')}</em></div>`).join('')}</section>`)
+        + `<p class="fd-lav"><b>${F('Not a schedule.')}</b> ${F('Follow hunger and fullness cues. {S} may feed more or less often.')}</p>`, 'expect'); },
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',

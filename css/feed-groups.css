@@ -409,3 +409,37 @@
 #main .fd-group .fd-tbl{display:grid;grid-template-columns:72px repeat(3,1fr);background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:12px 14px;margin:0 0 12px;row-gap:10px;column-gap:6px;font-size:14px;color:#3d3945;align-items:center}
 #main .fd-group .fd-tbl > div:nth-child(-n+4){font-size:12px;color:#7a7480;font-weight:600}
 #main .fd-group .fd-tbl b{font-size:14px;color:#2b2733}
+/* Nov 27: expressed milk, vitamin D, example days */
+#main .fd-group .fd-bm{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:10px 10px 12px;margin:0 0 14px}
+#main .fd-group .fd-bm-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+#main .fd-group .fd-bm-3 b{display:block;font-size:14px;color:#2b2733;margin:2px 2px 2px}
+#main .fd-group .fd-bm-3 small{display:block;font-size:12.5px;line-height:1.35;color:#5e5a66;margin:0 2px}
+#main .fd-group .fd-bm .fd-pnote{margin:0}
+#main .fd-group .fd-tbl2{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr;background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;overflow:hidden;margin:0 0 12px;font-size:14.5px;color:#3d3945}
+#main .fd-group .fd-tbl2 > *{padding:13px 12px;border-top:1px solid #f1ebe6}
+#main .fd-group .fd-tbl2 .is-h{background:#f6eef2;border-top:0;font-size:13px;font-weight:700;color:#9b4766}
+#main .fd-group .fd-tbl2 b{color:#2b2733}
+#main .fd-group .fd-tbl2 small{display:block;font-size:11.5px;color:#7a7480}
+#main .fd-group .fd-clean3{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:12px;margin:0 0 14px}
+#main .fd-group .fd-clean3 ol{list-style:none;margin:0 0 10px;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+#main .fd-group .fd-clean3 i{display:block;background:#fbe4ec;color:#9b4766;font-style:normal;font-weight:700;border-radius:12px;padding:7px 0;margin-bottom:8px}
+#main .fd-group .fd-clean3 b{display:block;font-size:14.5px;color:#2b2733}
+#main .fd-group .fd-clean3 span{display:block;font-size:12.5px;line-height:1.35;color:#5e5a66;margin-top:2px}
+#main .fd-group .fd-foot2{margin:0;background:#f8f2f5;border:1px solid #efe2e8;border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45;color:#3d3945}
+#main .fd-group .fd-photo1{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;overflow:hidden;margin:0 0 14px}
+#main .fd-group .fd-photo1 img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+#main .fd-group .fd-photo1 div{padding:14px 16px}#main .fd-group .fd-photo1 b{display:block;font-size:15px;color:#2b2733}#main .fd-group .fd-photo1 p{margin:4px 0 0;font-size:14px;line-height:1.45;color:#5e5a66}
+#main .fd-group .fd-dots{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;overflow:hidden;margin:0 0 14px}
+#main .fd-group .fd-dots > div{display:grid;grid-template-columns:1.2fr 1.3fr auto;align-items:center;padding:14px 16px;gap:8px}
+#main .fd-group .fd-dots > div + div{border-top:1px solid #f1ebe6}
+#main .fd-group .fd-dots b{display:block;font-size:15px;color:#2b2733}#main .fd-group .fd-dots small{display:block;font-size:12.5px;color:#7a7480;margin-top:2px}
+#main .fd-group .fd-dd > span{display:flex;gap:5px}#main .fd-group .fd-dd i{width:14px;height:14px;border-radius:50%;background:#bd6a8b}
+#main .fd-group .fd-dots em{font-style:normal;font-weight:700;color:#9b4766;font-size:14px}
+#main .fd-group .fd-times{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:0 16px;margin:0 0 8px}
+#main .fd-group .fd-times > div{display:grid;grid-template-columns:64px 14px 1fr;gap:12px;align-items:start;padding:13px 0}
+#main .fd-group .fd-times > div + div{border-top:1px solid #f1ebe6}
+#main .fd-group .fd-times em{font-style:normal;font-weight:700;color:#9b4766;font-size:14px}
+#main .fd-group .fd-times i, #main .fd-group .fd-key i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-top:4px}
+#main .fd-group .is-m{background:#bd6a8b}#main .fd-group .is-f{background:#6aa884}
+#main .fd-group .fd-times b{display:block;font-size:15px;color:#2b2733}#main .fd-group .fd-times small{display:block;font-size:13px;color:#5e5a66;margin-top:2px}
+#main .fd-group .fd-key{display:flex;align-items:center;gap:6px;font-size:13px;color:#5e5a66;margin:0 4px 14px}#main .fd-group .fd-key i{margin:0 0 0 8px}#main .fd-group .fd-key i:first-child{margin-left:0}
