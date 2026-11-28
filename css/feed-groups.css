@@ -292,3 +292,9 @@
 #main .fd-group .fd-grapefig{margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:0}
 #main .fd-group p.fd-figcap{margin:0 0 16px;background:#fffdfa;border:1px solid #ece7e2;border-top:0;border-radius:0 0 20px 20px;padding:4px 16px 14px}
 #main .fd-group .tpl-versus em svg{display:inline;margin-right:3px}
+/* every icon row list on a redone Feeding page rotates its soft backgrounds, link rows included */
+#main .hub-detail.care-v2.fd-group[data-ss] .hub-list > :nth-child(5n+1):not(:has([role=checkbox])) .hub-dot:not(:has(img)){background:#e6f5ec!important}
+#main .hub-detail.care-v2.fd-group[data-ss] .hub-list > :nth-child(5n+2):not(:has([role=checkbox])) .hub-dot:not(:has(img)){background:#e7effc!important}
+#main .hub-detail.care-v2.fd-group[data-ss] .hub-list > :nth-child(5n+3):not(:has([role=checkbox])) .hub-dot:not(:has(img)){background:#fff3dc!important}
+#main .hub-detail.care-v2.fd-group[data-ss] .hub-list > :nth-child(5n+4):not(:has([role=checkbox])) .hub-dot:not(:has(img)){background:#fdeee6!important}
+#main .hub-detail.care-v2.fd-group[data-ss] .hub-list > :nth-child(5n+5):not(:has([role=checkbox])) .hub-dot:not(:has(img)){background:#fdeef2!important}
