@@ -335,7 +335,7 @@
     x_tough: () => { const X = window.__fdx || {}, solids = X.stg && X.stg() >= 3, nurse = X.nurses && X.nurses(), T = H().TPLB;
       const go = id => id.includes(':') ? `openPage('${id}')` : `openPage('chg:${CAT}:mock:${id}')`;
       const cols = solids
-        ? [['At meals', 'pink', [['z_gag', 'Gagging or choking', 'Know the difference'], ['z_refuse', 'Refusing food', 'Turns away, eats less']]],
+        ? [['At meals', 'pink', [['z_gag', 'Gagging', 'Or is it choking?'], ['z_refuse', 'Refusing food', 'Turns away']]],
            ['Tummy and skin', 'sun', [['z_reaction', 'A rash after food', 'Spot a reaction'], ['chg:Daily rhythm:d:look:3:poop', 'Constipation', 'After new foods']]]]
         : nurse
         ? [['During feeds', 'pink', [['x_refuse', 'Pulling away', 'Stops mid-feed'], ['x_hurt', 'Feeding hurts', 'Painful latch'], ['x_nobottle', 'Bottle refusal', 'Won’t take one']]],
