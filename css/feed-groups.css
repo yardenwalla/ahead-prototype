@@ -393,3 +393,16 @@
 #main .fd-group .fd-withfoot{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:0 12px 10px;margin:0 0 14px}
 #main .fd-group .fd-withfoot .fd-list{border:0;background:none;margin:0;padding:0}
 #main .fd-group .fd-numrows .fd-list-r > span.fd-nr{display:flex!important;align-items:center;justify-content:center;width:30px;height:30px;line-height:1;padding:0;text-align:center;font-size:15px;font-weight:700;color:#9b4766;background:#fbe4ec;border-radius:9px}
+#main .fd-group .fd-clue{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;margin:0 0 14px;overflow:hidden}
+#main .fd-group .fd-clue > div{display:grid;grid-template-columns:42% 22px 1fr;gap:10px;align-items:center;padding:14px}
+#main .fd-group .fd-clue > div + div{border-top:1px solid #f1ebe6}
+#main .fd-group .fd-cl-if{background:#fbe4ec;border-radius:14px;padding:12px;font-size:14.5px;font-weight:650;line-height:1.3;color:#2b2733;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+#main .fd-group .fd-clue em{display:block;font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#9b4766;margin-bottom:4px}
+#main .fd-group .fd-cl-arr{color:#c9a3b3;display:grid;place-items:center}
+#main .fd-group .fd-clue b{display:block;font-size:15px;color:#2b2733}
+#main .fd-group .fd-clue small{display:block;font-size:13.5px;line-height:1.4;color:#5e5a66;margin-top:2px}
+#main .fd-group .fd-note-ic{display:flex;gap:12px;background:#efedf8;border-radius:20px;padding:14px 16px;margin:0 0 16px}
+#main .fd-group .fd-note-ic > span{flex:none;width:34px;height:34px;border-radius:10px;background:#fff;display:grid;place-items:center}
+#main .fd-group .fd-note-ic > span svg{width:20px;height:20px}
+#main .fd-group .fd-note-ic b{display:block;font-size:15px;color:#4f4a63;margin-bottom:2px}
+#main .fd-group .fd-note-ic p{margin:0;font-size:14px;line-height:1.45;color:#4f4a63}
