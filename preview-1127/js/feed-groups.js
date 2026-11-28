@@ -107,8 +107,8 @@
  const X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true;
     const top = head(nurse ? 'heart' : 'bottle', 'Newborn · First 6 weeks', 'A feed, start to finish', nurse ? 'Follow {p} cues, take breaks, and know when {s’s} done.' : 'Follow {p} cues, pace the feed, and know when {s’s} done.');
     const steps = flow(nurse
-      ? [['cue-2', 'Hunger cues', 'Turning to feed, hands to mouth'], ['hold-cradle', 'Latch on', 'Wide mouth, chin first'], ['nb-pause', 'Pause', 'When sucking slows'], ['nb-burp', 'Burp', 'Then the other side'], ['full', 'Fullness cues', 'Turning away, relaxed']]
-      : [['cue-2', 'Hunger cues', 'Turning to feed, hands to mouth'], ['pace-step-1', 'Feed', 'Bottle about level'], ['pace-step-2', 'Pause', 'Tip it down to rest'], ['nb-burp', 'Burp', 'Every 2–3 oz'], ['full', 'Fullness cues', 'Turning away, relaxed']]);
+      ? [['cue-2', 'Hunger cues', 'Rooting, hands to mouth'], ['hold-cradle', 'Latch on', 'Wide mouth, chin first'], ['nb-pause', 'Pause', 'When sucking slows'], ['nb-burp', 'Burp', 'Then the other side'], ['full', 'Fullness cues', 'Turning away, relaxed']]
+      : [['cue-2', 'Hunger cues', 'Rooting, hands to mouth'], ['pace-step-1', 'Feed', 'Bottle about level'], ['pace-step-2', 'Pause', 'Tip it down to rest'], ['nb-burp', 'Burp', 'Every 2–3 oz'], ['full', 'Fullness cues', 'Turning away, relaxed']]);
     const how = nurse
       ? banner('heart', 'A good latch', 'Wide mouth, lips flared out. It should feel like a tug, not a pinch.')
         + sect('Holds to try', '', strip([['hold-crosscradle', 'Cross-cradle'], ['hold-cradle2', 'Cradle'], ['hold-laidback2', 'Laid-back'], ['hold-sidelying', 'Side-lying']]))
@@ -232,6 +232,7 @@
       if (card) card.insertAdjacentHTML('afterend', callout('Hard to wake for a feed?', 'Undress {o} to {p} diaper, or stroke {p} feet.')); })
   };
   const G = {
+    day: () => G.fd_day(),
     // Milk feeds: hungrier days and distracted feeds on one page (the old two-step guide is gone).
     g_change: () => { const n = sections('m1_now'), lead = n['What to do'] ? (() => { const x = document.createElement('div'); x.innerHTML = n['What to do'].html; const p = x.querySelector('p, .hub-card-text, div'); return p ? p.textContent.trim().split('\n')[0] : ''; })() : '';
       return page(head('clock', 'How feeds are changing', 'Feeds change as {s} {grow|grows}', 'Hungrier days come and go, and daytime feeds get shorter. Both are common.'),
@@ -276,7 +277,7 @@
     // Nov 27 (Meals, Yarden's own mockups): the photos and the week chart stay; rows carry the extra lines.
     z_meal: () => withPage('z_meal', root => { asGroup(root);
       swapSection(root, 'What to do', rowsCard([['bowl', 'Share from your plate', 'Take out {p} portion before adding salt.'], ['hand', 'Let {o} feed {o}self', 'Fingers first, and a spoon to practice. Expect some mess.']])
-        + callout('Good to know', 'Keep foods soft and easy to mash with your fingers.'), 'How to do it'); }),
+        + callout('Keep it soft', 'Pieces should be easy to mash with your fingers.'), 'How to do it'); }),
     z_day: () => withPage('z_day', root => { asGroup(root);
       const wk = root.querySelector('.tpl-week'); if (wk) wk.innerHTML = wk.innerHTML.replace('not the day', 'not one meal').replace('That’s normal.', 'That’s common.').replace("That's normal.", "That's common.");
       const h = [...root.querySelectorAll('h2')].find(x => /day by day/.test(x.textContent)); if (h) h.textContent = F('A week of appetites');
@@ -286,8 +287,7 @@
       const photoH = [...root.querySelectorAll('h2')].find(x => /Milk from a cup/.test(x.textContent)); if (photoH) { const img = photoH.nextElementSibling && photoH.nextElementSibling.querySelector('img'); if (img) img.src = 'assets/feeding/cup-straw.jpg'; photoH.remove(); }
       swapSection(root, 'What to do', `<div class="fd-twot is-ic"><section class="is-lav"><em>${F(m < 12 ? 'Now' : 'Every day')}</em><span class="fd-tw-ic">${ic('cup')}</span><b>${F('Practice with a cup')}</b><small>${F('Small sips of water from an open or straw cup, at meals.')}</small></section>`
         + `<section class="is-peach"><em>${F('At 12 months')}</em><span class="fd-tw-ic">${ic('bottle')}</span><b>${F('Whole milk can start')}</b><small>${F('From a cup, not low-fat. Up to 24 oz a day, so there’s room for iron-rich food.')}</small></section></div>`
-        + callout('Good to know', (nurseOnly ? 'Nursing can carry on as long as you both like. ' : 'Phase out bottles between 12 and 18 months. ') + 'Ask your pediatrician about vitamin D after age 1.')
-        + (nurseOnly ? '' : `<p class="fd-lav"><b>${F('Switching from bottles:')}</b> ${F('Swap one bottle for a cup each week.' + (X.formulaFam && X.formulaFam() ? ' Picky about the taste? Mix half and half with formula for a week. Toddler formula isn’t needed.' : ''))}</p>`), 'The transition at a glance'); }),
+        + `<h2 class="hub-h2">${F('Good to know')}</h2>` + rowsCard([nurseOnly ? ['heart', 'Nursing can carry on', 'As long as you both like.'] : ['bottle', 'Phase out bottles', 'Between 12 and 18 months. Swap one for a cup each week.'], !nurseOnly && X.formulaFam && X.formulaFam() && ['cup', 'Picky about the taste?', 'Mix half and half with formula for a week. Toddler formula isn’t needed.'], ['sun', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}.']].filter(Boolean)), 'The transition at a glance'); }),
     fd_day: () => { const X = window.__fdx || {}; if (X.stg && X.stg() < 4) return G.fd_day_early(); if (!(X.stg && X.stg() === 4)) return window.changesRoute('chg:' + CAT + ':mock:fd_day');
       const parts = [['rot-oats', 'Morning', [['7 am', 'milk'], ['8 am', 'breakfast']]], ['plate-veg', 'Midday', [['10 am', 'snack'], ['12 pm', 'lunch'], ['', 'Water from a cup'], ['1 pm', 'milk before a nap']]], ['opt-banana', 'Afternoon', [['3:30 pm', 'snack']]], ['opt-pasta', 'Evening', [['5:30 pm', 'dinner'], ['7 pm', 'milk before bed']]]];
       return page(head('heart', 'Example day', 'A day at 9–12 months', 'An example, not a schedule. {S} {lead|leads}, and no two days look the same.'),
@@ -306,7 +306,7 @@
       const ARROW = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>';
       return page(head(bot ? 'bottle' : 'heart', 'Feeding challenges', 'Pulling away during feeds', 'A clue often comes just before {s} {pull|pulls} off.'),
         sect('Spot the clue → try the fix', '', `<section class="fd-clue">${rows.map(([n, t, x]) => `<div><span class="fd-cl-if"><em>${F('If ' + '{s}' + '…')}</em>${F(n)}</span><span class="fd-cl-arr">${ARROW}</span><div><em>${F('Try this')}</em><b>${F(t)}</b><small>${F(x)}</small></div></div>`).join('')}</section>`)
-        + `<section class="fd-note-ic"><span>${ic('heart')}</span><div><b>${F('Still pulling off?')}</b><p>${F('Give {o} a moment. If {s} {seem|seems} hungry, reposition and offer again.' + (m >= 3 ? ' Shorter feeds can happen as babies grow.' : ''))}</p></div></section>`
+        + `<p class="fd-lav"><b>${F('Still pulling off?')}</b> ${F('Give {o} a moment. If {s} {seem|seems} hungry, reposition and offer again.' + (m >= 3 ? ' Shorter feeds can happen as babies grow.' : ''))}</p>`
         + T.calls({ ped: '{s} {refuse|refuses} several feeds in a row, {have|has} fewer wet diapers, or {are|is} unusually sleepy.', ...feverCall() }), 'expect'); },
     x_gain: () => withPage('x_gain', root => { asGroup(root); swapHelps(root, [['clock', 'Feed often', realMo() < 1 ? '8–12 times a day in the first weeks.' : 'On cue, and more often if your pediatrician says.'], ['steth', 'Follow your pediatrician’s plan', 'Top-ups or set feed times, if they’re suggested.']]); root.querySelectorAll('.care-calls p').forEach(p => { p.innerHTML = p.innerHTML.replace('feeds, or diapers stay low for a day, or', 'feeds, diapers stay low for a day, or'); }); const cap = [...root.querySelectorAll('figcaption, .fd-growth-cap, p')].find(x => /same curve/.test(x.textContent));
       const note = `<p class="fd-lav"><b>${F('Your pediatrician reads the curve.')}</b> ${F('One weigh-in can look low. Ask at the next checkup what {p} pattern means.')}</p>`;
@@ -371,7 +371,7 @@
       return page(head('drop', 'Vitamin D', 'Vitamin D drops, every day', 'Vitamin D helps build strong bones. Breast milk contains very little.'),
         sect('How to give the drops', '', `<section class="fd-photo1"><img src="assets/feeding/vitd-drop.jpg" alt="" loading="lazy"><div><b>${F('Aim toward the inside of {p} cheek.')}</b><p>${F('Give it slowly, or mix the dose into a little milk {s} will finish.')}</p></div></section>`)
         + sect('What {s} {need|needs}', '', rowsCard([['sun', 'Vitamin D · 400 IU a day', 'For breastfed and partly breastfed babies, from the first days.'], ['note', 'Check the product label', 'Strengths vary. Use the dropper it comes with.']]))
-        + sect('Also worth knowing', '', textRows([fam && ['Also on formula?', 'How much formula {s} {drink|drinks} can change whether drops are needed. Ask {p} pediatrician.'], ['Iron is a separate question', 'Drops often start around 4 months for breastfed babies. See the Iron guide.'], ['No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days.']].filter(Boolean))), 'expect'); },
+        + sect('Good to know', '', rowsCard([fam && ['bottle', 'Also on formula?', 'How much formula {s} {drink|drinks} can change whether drops are needed. Ask {p} pediatrician.'], ['drop', 'Iron is a separate question', 'Drops often start around 4 months for breastfed babies.'], ['cup', 'No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days.']].filter(Boolean))), 'expect'); },
     // Example day, earlier stages (Yarden's mockups): four parts of the day, dots for feeds.
     fd_day_early: () => { const X = window.__fdx || {}, st = X.stg ? X.stg() : 0;
       if (st === 3) { const nurse = X.nurses && X.nurses(), milk = nurse ? (X.formulaFam && X.formulaFam() ? 'Nurse or a bottle' : 'Nurse') : 'A bottle';
@@ -395,18 +395,18 @@
             : [['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']], 'See more foods'))
         + `<section class="fd-squish"><div class="fd-sq-top"><div><em>${F('Before you serve')}</em><b>${F('The squish test')}</b><p>${F('Press a piece. It should flatten easily.')}</p></div><svg viewBox="0 0 96 40" width="96" height="40" aria-hidden="true"><rect x="4" y="6" width="30" height="28" rx="7" fill="#9fae6b"/><path d="M42 20h16m-5-5 5 5-5 5" stroke="#9b4766" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="78" cy="22" rx="15" ry="7" fill="#9fae6b"/></svg></div><small>${F('Fork-mash for lumps. Quarter round foods lengthwise.')}</small></section>`); },
     g_meal: () => { const T = H().TPLB, milk = ['Milk before or after meals, whichever suits {p} mood.', 'Water from a cup with meals, 4–8 oz a day at most.', 'Milk eases off slowly as meals grow, mostly after 9 months.'];
-      if (mo() >= 8.5) return withPage('z_meal', root => addBefore(root, tips('Milk and water', milk)));
+      if (mo() >= 8.5) return withPage('z_meal', root => addBefore(root, sect('Milk and water', '', rowsCard([['drop', 'Milk before or after meals', 'Whichever suits {p} mood.'], ['cup', 'Water from a cup', 'With meals, 4–8 oz a day at most.'], ['clock', 'Milk eases off slowly', 'As meals grow, mostly after 9 months.']]))));
       const lead = sections('z_meal')._lead;
       return page(head('highchair', 'A meal, start to finish', 'First meals are just a few bites', 'Milk is still {p} main food. Let {o} set the pace.'),
         sect('What a meal looks like', '', `<div class="ct-page is-howto">${lead}</div>`)
         + sect('The simple flow', '', T.photoGrid([['feeding/meal-1', '1. Sit {o} up', 'Strapped in, facing you'], ['feeding/meal-2', '2. Offer a little', 'A spoonful, or a soft strip'], ['feeding/meal-3', '3. Let {o} lead', 'Done when {s} {turn|turns} away']]))
-        + tips('Good to know', ['Pushing food out with the tongue is common at first. It fades.', 'Pick a calm time, not a hungry one.', 'Expect mess. Most lands on the tray.', 'Milk can come before or after the meal.'])); },
+        + sect('Good to know', '', rowsCard([['heart', 'Pick a calm time', 'Not when {s’s} very hungry.'], ['bowl', 'Expect mess', 'Most of it lands on the tray.'], ['drop', 'Milk before or after', 'Either works.'], ['hand', 'Pushing food out?', 'The tongue does that at first. It fades.']]))); },
     g_all: () => { const T = H().TPLB, X = window.__fdx, b = X && X.isBreast ? X.isBreast() : true, f = X && X.formulaFam ? X.formulaFam() : false, thin = !b ? 'formula' : f ? 'breast milk or formula' : 'breast milk';
       return page(head('peanut', 'Common allergens', 'Try the common allergens early', 'Start around 6 months. Ask first if {s} has severe eczema or an egg allergy.'),
         sect('The 9 common allergens', 'Try one at a time. Each photo shows one safe way to serve it.', alPhotos())
         + sect('How to introduce', '', window.ctPhotoSteps([['photo:feeding/pb-spoon', 'A little smooth peanut butter', 'About ½ teaspoon. Never whole nuts'], ['photo:feeding/pb-thin', 'Thin it', 'With warm water or ' + thin + ', until runny'], ['photo:feeding/pb-offer', 'Offer it at home', 'Early in the day, so you can watch']], [['Egg works the same way', 'Well cooked, never runny']]))
-        + tips('Keep them coming', ['A few times a week once {s’ve} had it.', 'Peanut stirred into oatmeal, egg baked into pancakes.'])
-        + T.calls({ ped: 'a few hives, or vomiting, after a new food.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or {s’s} very sleepy or floppy.' })); }
+        + callout('Keep them coming', 'A few times a week once {s’s} had it, like peanut stirred into oatmeal or egg baked into pancakes.')
+        + T.calls({ ped: 'a few hives, or vomiting, after a new food.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, or hives all over.' })); }
   };
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) { const q = String(r).split(':');
