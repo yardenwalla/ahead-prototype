@@ -172,6 +172,9 @@
   const photoNotice = (img, pos, cap, chips) => `<section class="fd-pn"><figure><img src="assets/${img}.jpg" alt="" loading="lazy" style="object-position:50% ${pos}"><figcaption>${F(cap)}</figcaption></figure><div>${chips.map(c => `<span>${F(c)}</span>`).join('')}</div></section>`;
   const numRows = (rows, foot) => `<section class="fd-list fd-numrows">${rows.map(([t, x], i) => `<div class="fd-list-r"><span class="fd-nr">${i + 1}</span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}${foot ? `<p class="fd-foot"><b>${F(foot[0])}</b> ${F(foot[1])}</p>` : ''}</section>`;
   const swapHelps = (root, rows) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === 'What helps'); if (!h) return; let n = h.nextElementSibling; while (n && !/^H2$/.test(n.tagName)) { const nx = n.nextElementSibling; n.remove(); n = nx; } h.insertAdjacentHTML('afterend', rowsCard(rows)); };
+  const hubPolish = (root, ren) => {
+    root.querySelectorAll('.fdt-tile').forEach(t => { const b = t.querySelector('b'), sm = t.querySelector('small'), r = b && ren[b.textContent.trim()]; if (r) { b.textContent = F(r[0]); if (sm) sm.textContent = F(r[1]); } else if (sm) sm.querySelectorAll('span').forEach(x => x.remove()); });
+    const rows = [...root.querySelectorAll('.fdt-row')]; if (rows.length) { const box = document.createElement('section'); box.className = 'fd-hubrows'; rows[0].parentNode.insertBefore(box, rows[0]); rows.forEach(r => box.appendChild(r)); } };
   const cardAfter = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); return h && h.nextElementSibling; };
   // Nov 27 (Yarden's mockup): formula families get one page, start to finish, instead of four steps. The type switch
   // changes only the making steps; storage and cleaning are the same for every type.
@@ -287,7 +290,7 @@
       const photoH = [...root.querySelectorAll('h2')].find(x => /Milk from a cup/.test(x.textContent)); if (photoH) { const img = photoH.nextElementSibling && photoH.nextElementSibling.querySelector('img'); if (img) img.src = 'assets/feeding/cup-straw.jpg'; photoH.remove(); }
       swapSection(root, 'What to do', `<div class="fd-twot is-ic"><section class="is-lav"><em>${F(m < 12 ? 'Now' : 'Every day')}</em><span class="fd-tw-ic">${ic('cup')}</span><b>${F('Practice with a cup')}</b><small>${F('Small sips of water from an open or straw cup, at meals.')}</small></section>`
         + `<section class="is-peach"><em>${F('At 12 months')}</em><span class="fd-tw-ic">${ic('bottle')}</span><b>${F('Whole milk can start')}</b><small>${F('From a cup, not low-fat. Up to 24 oz a day, so there’s room for iron-rich food.')}</small></section></div>`
-        + `<h2 class="hub-h2">${F('Good to know')}</h2>` + rowsCard([nurseOnly ? ['heart', 'Nursing can carry on', 'As long as you both like.'] : ['bottle', 'Phase out bottles', 'Between 12 and 18 months. Swap one for a cup each week.'], !nurseOnly && X.formulaFam && X.formulaFam() && ['cup', 'Picky about the taste?', 'Mix half and half with formula for a week. Toddler formula isn’t needed.'], ['sun', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}.']].filter(Boolean)), 'The transition at a glance'); }),
+        + `<h2 class="hub-h2">${F('Good to know')}</h2>` + rowsCard([nurseOnly ? ['heart', 'Nursing can carry on', 'For as long as you both like.'] : ['bottle', 'Phase out bottles', 'Gradually between 12 and 18 months, swapping one for a cup each week.'], !nurseOnly && X.formulaFam && X.formulaFam() && ['cup', 'Picky about the taste?', 'Mix half and half with formula for a week. Toddler formula isn’t needed.'], ['sun', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}.']].filter(Boolean)), 'The transition at a glance'); }),
     fd_day: () => { const X = window.__fdx || {}; if (X.stg && X.stg() < 4) return G.fd_day_early(); if (!(X.stg && X.stg() === 4)) return window.changesRoute('chg:' + CAT + ':mock:fd_day');
       const parts = [['rot-oats', 'Morning', [['7 am', 'milk'], ['8 am', 'breakfast']]], ['plate-veg', 'Midday', [['10 am', 'snack'], ['12 pm', 'lunch'], ['', 'Water from a cup'], ['1 pm', 'milk before a nap']]], ['opt-banana', 'Afternoon', [['3:30 pm', 'snack']]], ['opt-pasta', 'Evening', [['5:30 pm', 'dinner'], ['7 pm', 'milk before bed']]]];
       return page(head('heart', 'Example day', 'A day at 9–12 months', 'An example, not a schedule. {S} {lead|leads}, and no two days look the same.'),
@@ -328,19 +331,27 @@
         sect('What matters most today', '', doCard([['Offer breast milk or formula more often, in smaller amounts.']]))
         + sect('Make feeds a little easier', '', rowsCard([['drop', 'Clear a stuffy nose', 'Saline drops, then gentle suction, before feeds.'], ['heart', 'Watch energy and diapers', 'Can {s} stay awake to feed? Are wet diapers still happening?']]))
         + T.calls({ ped: realMo() < 3 ? 'fewer wet diapers, or vomiting that keeps happening.' : 'fewer wet diapers, vomiting that keeps happening, or a fever over a day or ' + (realMo() < 6 ? '101' : '103') + '°F.', ...feverCall(), now: 'trouble breathing, or {s’s} very hard to wake.', nowLabel: 'Call 911' }), 'expect'); },
-    x_tough: () => { const X = window.__fdx || {}; if (!(X.stg && X.stg() >= 3)) return withPage('x_tough', root => { asGroup(root);
-        const ttl = root.querySelector('.dev-area-head h1'); if (ttl) ttl.textContent = F('Common feeding worries, and what helps');
-        const lead = root.querySelector('.hub-lead'); if (lead) lead.textContent = F('Find what you’re seeing, then the right next step.');
-        const grid = root.querySelector('.fdt-grid'); if (grid) grid.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('What’s happening?')}</h2>`);
-        const first = root.querySelector('.fdt-row'); if (first) first.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('Other common challenges')}</h2>`);
-        const more = root.querySelector('details.fdt-more'); if (more) { const rows = [...more.querySelectorAll('.fdt-row')]; rows.forEach(r => more.parentNode.insertBefore(r, more)); more.remove(); } });
-      return withPage('x_tough', root => { asGroup(root); const ttl = root.querySelector('.dev-area-head h1, .dev-area-head h2, .hub-title'); if (ttl) ttl.textContent = F('Common mealtime worries, and what helps');
-        const lead = root.querySelector('.hub-lead'); if (lead) lead.textContent = F('Find what you’re seeing, then the right next step.');
-        const ren = { 'Gagging': ['Gagging or choking', 'Know the difference, and what to do'], 'Refusing food': ['Refusing food', 'Turning away, or eating less'], 'A rash after a new food': ['A rash after food', 'Spot a possible reaction'], 'Constipation': ['Constipation', 'When new foods change poop'] };
-        root.querySelectorAll('.fdt-tile').forEach(t => { const b = t.querySelector('b'), sm = t.querySelector('small, span:not(.fdt-ic)'), r = b && ren[b.textContent.trim()]; if (r) { b.textContent = F(r[0]); if (sm) sm.textContent = F(r[1]); } });
-        const grid = root.querySelector('.fdt-grid'); if (grid) grid.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('What’s happening?')}</h2>`);
-        const row = root.querySelector('.fdt-row'); if (row) row.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('Other common challenges')}</h2>`);
-        const calls = root.querySelector('.care-tpl.is-urgent'); if (calls) calls.outerHTML = `<div class="care-tpl is-urgent">${H().TPLB.calls({ ped: 'fewer wet diapers, or a fever over a day or 103°F.', er: 'green or bloody vomit.', now: 'trouble breathing, or a severe reaction.', nowLabel: 'Call 911' })}</div>`; }); },
+    // Nov 27 (Yarden): two grouped columns, then "Other worries" as rows, then When to call. Same layout at every stage.
+    x_tough: () => { const X = window.__fdx || {}, solids = X.stg && X.stg() >= 3, nurse = X.nurses && X.nurses(), T = H().TPLB;
+      const go = id => id.includes(':') ? `openPage('${id}')` : `openPage('chg:${CAT}:mock:${id}')`;
+      const cols = solids
+        ? [['At meals', 'pink', [['z_gag', 'Gagging or choking', 'Know the difference'], ['z_refuse', 'Refusing food', 'Turns away, eats less']]],
+           ['Tummy and skin', 'sun', [['z_reaction', 'A rash after food', 'Spot a reaction'], ['chg:Daily rhythm:d:look:3:poop', 'Constipation', 'After new foods']]]]
+        : nurse
+        ? [['During feeds', 'pink', [['x_refuse', 'Pulling away', 'Stops mid-feed'], ['x_hurt', 'Feeding hurts', 'Painful latch'], ['x_nobottle', 'Bottle refusal', 'Won’t take one']]],
+           ['Tummy and diapers', 'sun', [['x_spit', 'Spit-up', 'Milk comes back'], ['x_gas', 'Gas or fussing', 'Squirming, crying'], ['chg:Daily rhythm:d:look:1:poop', 'Poop changes', 'Color or texture']]]]
+        : [['During feeds', 'pink', [['x_refuse', 'Pulling away', 'Stops mid-feed'], ['x_gas', 'Gas or fussing', 'Swallowed air']]],
+           ['Tummy and diapers', 'sun', [['x_spit', 'Spit-up', 'Milk comes back'], ['chg:Daily rhythm:d:look:1:poop', 'Poop changes', 'Color or texture']]]];
+      const rows = solids
+        ? [['z_teeth', 'tooth', 'Teething and meals', 'Sore gums, shorter feeds'], ['z_sick', 'thermo', 'Sick, or a stuffy nose', 'Feeding when {s’s} unwell']]
+        : [['x_gain', 'steth', 'Weight gain', 'What helps, and what gets checked'], ['chg:Sleep:d:crying', 'moon', 'Crying a lot', 'What helps, and when it eases'], ['x_allergy', 'star', 'Could it be a milk allergy?', 'Blood in poop, a rash, or vomiting']];
+      const m = realMo(), calls = solids
+        ? T.calls({ ped: 'fewer wet diapers, or a fever over a day or 103°F.', er: 'green or bloody vomit.', now: 'trouble breathing, or a severe reaction.', nowLabel: 'Call 911' })
+        : T.calls({ ped: 'fewer wet diapers, or too sleepy to feed' + fevTail() + '.', ...feverCall(), er: 'green or bloody vomit.' });
+      const colsHtml = `<div class="fd-cols3 is-two">${cols.map(([g, tone, xs]) => `<section class="is-${tone}"><em>${F(g)}</em>${xs.map(([id, t, sub]) => `<button onclick="${go(id)}"><span><b>${F(t)}</b><small>${F(sub)}</small></span></button>`).join('')}</section>`).join('')}</div>`;
+      const rowsHtml = `<section class="fd-list">${rows.map(([id, icon, t, x]) => `<div class="fd-list-r" role="button" style="cursor:pointer" onclick="${go(id)}"><span class="fd-list-ic">${ic(icon)}</span><div><b>${F(t)}</b><span>${F(x)}</span></div><span class="hub-chev" aria-hidden="true">›</span></div>`).join('')}</section>`;
+      return page(head('heart', 'Feeding challenges', 'What are you noticing?', 'Find what you’re seeing, then the right next step.'),
+        colsHtml + `<h2 class="hub-h2">${F('Other worries')}</h2>` + rowsHtml + calls, 'expect'); },
     // Nov 27 (Yarden's mockups): bottle refusal and refusing food.
     x_nobottle: () => { const X = window.__fdx || {}; if (!(X.nurses && X.nurses()) || mo() >= 11) return window.changesRoute('chg:' + CAT + ':mock:x_nobottle'); const T = H().TPLB;
       return page(head('bottle', 'Feeding challenges', 'Won’t take a bottle? It often takes practice', 'Many babies who nurse need time to get used to a bottle. Keep it low-pressure.'),
@@ -395,12 +406,12 @@
             : [['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']], 'See more foods'))
         + `<section class="fd-squish"><div class="fd-sq-top"><div><em>${F('Before you serve')}</em><b>${F('The squish test')}</b><p>${F('Press a piece. It should flatten easily.')}</p></div><svg viewBox="0 0 96 40" width="96" height="40" aria-hidden="true"><rect x="4" y="6" width="30" height="28" rx="7" fill="#9fae6b"/><path d="M42 20h16m-5-5 5 5-5 5" stroke="#9b4766" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="78" cy="22" rx="15" ry="7" fill="#9fae6b"/></svg></div><small>${F('Fork-mash for lumps. Quarter round foods lengthwise.')}</small></section>`); },
     g_meal: () => { const T = H().TPLB, milk = ['Milk before or after meals, whichever suits {p} mood.', 'Water from a cup with meals, 4–8 oz a day at most.', 'Milk eases off slowly as meals grow, mostly after 9 months.'];
-      if (mo() >= 8.5) return withPage('z_meal', root => addBefore(root, sect('Milk and water', '', rowsCard([['drop', 'Milk before or after meals', 'Whichever suits {p} mood.'], ['cup', 'Water from a cup', 'With meals, 4–8 oz a day at most.'], ['clock', 'Milk eases off slowly', 'As meals grow, mostly after 9 months.']]))));
+      if (mo() >= 8.5) return withPage('z_meal', root => addBefore(root, sect('Milk and water', '', rowsCard([['drop', 'Milk before or after meals', 'Whichever suits {p} mood that day.'], ['cup', 'Water from a cup', 'A few sips with meals, up to 4–8 oz a day.'], ['clock', 'Milk eases off slowly', 'As meals grow, mostly after 9 months.']]))));
       const lead = sections('z_meal')._lead;
       return page(head('highchair', 'A meal, start to finish', 'First meals are just a few bites', 'Milk is still {p} main food. Let {o} set the pace.'),
         sect('What a meal looks like', '', `<div class="ct-page is-howto">${lead}</div>`)
         + sect('The simple flow', '', T.photoGrid([['feeding/meal-1', '1. Sit {o} up', 'Strapped in, facing you'], ['feeding/meal-2', '2. Offer a little', 'A spoonful, or a soft strip'], ['feeding/meal-3', '3. Let {o} lead', 'Done when {s} {turn|turns} away']]))
-        + sect('Good to know', '', rowsCard([['heart', 'Pick a calm time', 'Not when {s’s} very hungry.'], ['bowl', 'Expect mess', 'Most of it lands on the tray.'], ['drop', 'Milk before or after', 'Either works.'], ['hand', 'Pushing food out?', 'The tongue does that at first. It fades.']]))); },
+        + sect('Good to know', '', rowsCard([['heart', 'Pick a calm moment', 'When {s’s} awake and not too hungry.'], ['bowl', 'Mess is part of it', 'Most of the food ends up on the tray, and that’s okay.'], ['drop', 'Milk can come before or after', 'Whichever works best for {o}.'], ['hand', 'Pushing food back out?', '{P} tongue does that at first, and it fades with practice.']]))); },
     g_all: () => { const T = H().TPLB, X = window.__fdx, b = X && X.isBreast ? X.isBreast() : true, f = X && X.formulaFam ? X.formulaFam() : false, thin = !b ? 'formula' : f ? 'breast milk or formula' : 'breast milk';
       return page(head('peanut', 'Common allergens', 'Try the common allergens early', 'Start around 6 months. Ask first if {s} has severe eczema or an egg allergy.'),
         sect('The 9 common allergens', 'Try one at a time. Each photo shows one safe way to serve it.', alPhotos())
