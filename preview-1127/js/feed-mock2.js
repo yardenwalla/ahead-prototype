@@ -1892,7 +1892,7 @@
       bot && ['Bottles, start to finish', 'bottle', 'Make every bottle safely, the same way', 'Choose, make, store and clean', 'prep'],
       ['Is he getting enough?', 'diaper', 'Wet diapers show if he’s getting enough', 'How much, diapers, weight, vitamin D', 'growth']];
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('x_tough')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F('Spit-up, gas, refusing feeds, slow gain and more')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
-    return `<h2 class="hub-h2">${F(stg() === realStage() ? `Right now for ${name()}` : 'How newborn feeds work')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
+    return `<h2 class="hub-h2">${F(`Right now for ${name()}`)}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
 ;};
   P.nb_off = () => { const b = isBreast();
     const rows = [['moon', 'Nonstop evenings', 'Cluster feeding, and getting through the night', 'eve'], ['bottle', 'Spit-up', 'How much is normal, and burping', 'spit'], ['drop', 'Gas and crying', 'What helps, and when it won’t stop', 'gas'], ['diaper', 'Poop', 'Colors, and how often', 'poop'], b && ['heart', 'Breast or nipple pain', 'Sore nipples, lumps, burning', 'pain'], ['eye', 'Fussy, sleepy or not eating', 'What to try, and who can help', 'hard']].filter(Boolean);
@@ -3315,7 +3315,7 @@
     z_signs: () => P.z_ready(), z_setup: () => P.z_start(), z_tray: () => P.z_start(), z_allergy: () => P.z_plan(), z_notyet: () => P.z_plan(), z_water: () => P.z_milkfood(), z_family: () => P.z_meal(), z_appetite: () => P.z_day() });
   P.z_allergens = (() => { const prev = P.z_allergens; return () => prev().split(F('Common allergens early, then keep them going')).join(F('Try the common allergens early')).split(F('Early and often lowers the chance of a food allergy.')).join(F('Trying them early lowers the chance of a food allergy.')).split(F('Tap each one once he’s had it')).join(F('Want to keep track? Tap each one he’s had')).split(F('Once it’s in, offer it a few times a week.')).join(F('Once it’s in, keep it in his meals.')); })();
   const GUIDES = () => { const v = stg(), m = ageMo(), nurse = nurses(), bot = isBottle(), done = alGet().length;
-    if (v === 0) return [[XC.f1, 'hand', 'A feed, step by step', 'From the first hunger cue to the last burp', nurse ? 'Latch, burps, and when he’s full' : 'Pacing, burps, and when he’s full', 'xa:feed'],
+    if (v === 0) return [[XC.f1, 'hand', 'A feed, start to finish', 'From the first hunger cue to the last burp', nurse ? 'Latch, burps, and when he’s full' : 'Pacing, burps, and when he’s full', 'xa:feed'],
       [XC.routine, 'moon', 'Evenings and nights', 'Busy evenings, then quick and calm nights', 'Cluster feeding, and waking to feed', 'nb_eve'],
       [XC.growth, 'diaper', 'Is he getting enough?', 'Wet diapers are the best everyday sign', (() => { try { return (NOW - new Date(profile.dob + 'T12:00:00')) / 864e5 > 21 ? 'Wet diapers and steady growth' : 'How many wet diapers, day by day'; } catch (e) { return 'How many wet diapers, day by day'; } })(), 'nb_enough']];   // Nov 25: born early, the day-by-day chart is behind them (it follows the birthday)
     // Nov 26 (Yarden): a stage shows everything for that stage as soon as the baby reaches it, never a few guides at a time
@@ -3337,7 +3337,7 @@
       [XC.g1, 'clock', 'Meals, snacks and milk', 'Some days he eats a lot, some days little', 'Why the week matters most', 'z_day'],
       [XC.d1, 'cup', m >= 12 ? 'Now that he’s 1' : 'Turning 1', m >= 12 ? 'Whole milk can start now, from a cup' : 'A cup at meals now, whole milk at 12 months', nurse && !bot ? 'How much milk, and cups alongside nursing' : 'How much milk, and moving off bottles', 'z_milk12']]; };
   // Nov 19 (Yarden): each guide row previews what's inside with a small photo, and its name reads like the parent's question.
-  const GPHOTO = { 'A feed, step by step': 'th-feedstep', 'Evenings and nights': 'g-night', 'Is he getting enough?': 'g-diapers', 'Feeds now': 'th-feedsnow', 'Time apart': () => stg() === 1 && ageMo() >= 3 ? 'g-cooler' : 'pace-photo',
+  const GPHOTO = { 'A feed, step by step': 'th-feedstep', 'A feed, start to finish': 'th-feedstep', 'Evenings and nights': 'g-night', 'Is he getting enough?': 'g-diapers', 'Feeds now': 'th-feedsnow', 'Time apart': () => stg() === 1 && ageMo() >= 3 ? 'g-cooler' : 'pace-photo',
     'Distracted feeds': 'distracted', 'Is he ready?': 'sign-sits', 'How to start': 'tray', 'Foods to wait on': 'grape', 'How a meal goes': 'meal-2', 'Milk and solids together': 'g-cups',
     'Common allergens': 'pb-spoon', 'Beyond purées': 'tx-avo-2', 'Safe finger foods': 'squish2', 'Keeping foods in rotation': 'opt-egg', 'Feeding himself': 'pieces', 'How feeds are changing': 'distracted', 'Textures and finger foods': 'tx-avo-2', 'A meal, start to finish': 'meal-2', 'Common allergens': 'nutbutter', 'Meals, snacks and milk': 'meal-1', 'Turning 1': 'no-milk', 'Now that he’s 1': 'g-cups' };
   const gName = eb => eb === 'Allergens and foods to avoid' ? 'Foods to wait on' : eb;
