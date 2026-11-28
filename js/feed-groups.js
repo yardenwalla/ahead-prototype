@@ -235,6 +235,17 @@
       const ren = { 'Get help': 'Call 911', '5 back blows': 'Give 5 back blows', '5 chest thrusts': 'Give 5 chest thrusts' };
       root.querySelectorAll('.ct-steps2 b').forEach(b => { const n = [...b.childNodes].find(x => x.nodeType === 3 && x.textContent.trim()); if (n && ren[n.textContent.trim()]) n.textContent = ren[n.textContent.trim()]; });
       root.querySelectorAll('b').forEach(b => { if (b.textContent.trim() === 'Foods to wait on') { const sm = b.parentNode.querySelector('small'); if (sm) sm.textContent = F('Foods that need a safer shape'); } }); }),
+    // Nov 27 (Meals, Yarden's inspiration): keep the photos and the week chart; rows rotate colors; one pink callout each.
+    z_meal: () => withPage('z_meal', root => { asGroup(root);
+      swapSection(root, 'What to do', rowsCard([['hand', '{S} {feed|feeds} {o}self', 'Fingers first, and a spoon to practice.'], ['bowl', 'Same food, safer shape', 'Soft pieces {s} can squash, sized for {p} skills.']])
+        + callout('Share from your plate', 'Take out {p} portion before adding salt.'), 'What to do'); }),
+    z_day: () => withPage('z_day', root => { asGroup(root);
+      swapSection(root, 'What to do', callout('Your job, {p} job', 'You offer what and when. {S} decides whether, and how much. No coaxing, bribes or extra bites.')
+        + rowsCard([['heart', 'Pair new with familiar', 'Something {s} likes, next to something new.'], ['diaper', 'Getting enough?', 'Wet diapers, energy, and steady growth at checkups.']]), 'What to do'); }),
+    z_milk12: () => withPage('z_milk12', root => { asGroup(root); const X = window.__fdx || {}, nurseOnly = X.nurses && X.nurses() && !(X.formulaFam && X.formulaFam());
+      swapSection(root, 'What to do', numIcons([[ic('cup'), 'Practice cups now', 'An open or straw cup, alongside meals.'], [ic('bottle'), 'From 12 months', 'Whole milk from a cup, not low-fat until 2. Up to 24 oz a day.'],
+          nurseOnly ? [ic('heart'), 'Nurse as usual', 'Nursing can carry on as long as you both like.'] : [ic('bottle'), 'Phase out bottles', 'Gradually, between 12 and 18 months.']])
+        + callout('Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}.'), 'See how it works'); }),
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',

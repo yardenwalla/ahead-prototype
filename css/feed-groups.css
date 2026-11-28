@@ -298,3 +298,6 @@
 #main .hub-detail.care-v2.fd-group[data-ss] .hub-list > :nth-child(5n+3):not(:has([role=checkbox])) .hub-dot:not(:has(img)){background:#fff3dc!important}
 #main .hub-detail.care-v2.fd-group[data-ss] .hub-list > :nth-child(5n+4):not(:has([role=checkbox])) .hub-dot:not(:has(img)){background:#fdeee6!important}
 #main .hub-detail.care-v2.fd-group[data-ss] .hub-list > :nth-child(5n+5):not(:has([role=checkbox])) .hub-dot:not(:has(img)){background:#fdeef2!important}
+#main .care-v2.fd-group .fd-numic .fd-list-r:nth-child(1) .fd-list-ic{background:#e6f5ec}
+#main .care-v2.fd-group .fd-numic .fd-list-r:nth-child(2) .fd-list-ic{background:#e7effc}
+#main .care-v2.fd-group .fd-numic .fd-list-r:nth-child(3) .fd-list-ic{background:#fff3dc}
