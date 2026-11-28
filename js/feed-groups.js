@@ -192,6 +192,16 @@
       + sect('Clean after every feed', '', `<ol class="fd-three is-clean"><li><em class="fd-three-ic">${ic('hand')}</em><b>${F('1. Take apart')}</b><span>${F('Bottle, nipple and ring.')}</span></li><li><em class="fd-three-ic">${ic('drop')}</em><b>${F('2. Wash')}</b><span>${F('In hot, soapy water, or the dishwasher.')}</span></li><li><em class="fd-three-ic">${ic('sun')}</em><b>${F('3. Air-dry')}</b><span>${F('On a rack, not a towel.')}</span></li></ol>`)
       + callout('Sanitize once a day for now', 'Boil 5 minutes, steam, or a sanitize cycle. Most important under 2 months.');
     return page(top, body, 'howto'); };
+  const bmPage = () => {
+    const top = head('bottle', 'Bottles · How to', 'Breast milk, start to finish', 'Get it ready, know how long it keeps, and clean up.');
+    const table = `<section class="fd-tbl"><div></div><div>${F('Counter')}</div><div>${F('Fridge')}</div><div>${F('Freezer')}</div><b>${F('Fresh')}</b><div>${F('4 hours')}</div><div>${F('4 days')}</div><div>${F('6 months')}</div><b>${F('Thawed')}</b><div>${F('1–2 hours')}</div><div>${F('24 hours')}</div><div>${F('Never refreeze')}</div></section>`;
+    return page(top, sect('Get it ready', '', rowsCard([['clock', 'Oldest first', 'From the fridge, or thawed in the fridge overnight.'], ['drop', 'Swirl gently', 'Layers are common.'], ['heart', 'Warm or cool', 'Test a few drops on your wrist.']]))
+      + `<section class="fd-alert"><span>!</span><div><b>${F('Never microwave')}</b><p>${F('It heats unevenly and can burn. A bowl of warm water works best.')}</p></div></section>`
+      + sect('How long it keeps', '', table)
+      + `<p class="fd-pnote is-plain"><b>${F('Once a feed starts,')}</b> ${F('finish within 2 hours. Freeze flat in 2–4 oz bags. Out and about, a cooler with ice packs keeps it 24 hours.')}</p>`
+      + sect('Clean after every feed', '', `<ol class="fd-three is-clean"><li><em class="fd-three-ic">${ic('hand')}</em><b>${F('1. Take apart')}</b><span>${F('Bottle parts, and pump parts too.')}</span></li><li><em class="fd-three-ic">${ic('drop')}</em><b>${F('2. Wash')}</b><span>${F('In hot, soapy water, or the dishwasher.')}</span></li><li><em class="fd-three-ic">${ic('sun')}</em><b>${F('3. Air-dry')}</b><span>${F('On a rack, not a towel.')}</span></li></ol>`)
+      + callout('Sanitize once a day for now', 'Boil 5 minutes, steam, or a sanitize cycle. Most important under 2 months.')
+      + `<p class="fd-lav"><b>${F('Every day:')}</b> ${F('vitamin D drops. If you ever add formula, any iron-fortified one works.')}</p>`, 'howto'); };
   const NB = {
     // v3 (Yarden: liked the befores; her mockups): the befores, with a tighter night chart, icon rows for what to do,
     // and the early-weeks-only "hard to wake" callout.
@@ -334,6 +344,21 @@
         sect('See what {s’s} telling you', '', photoNotice('feeding/refuse-turn', '40%', 'Turning away or closing {p} mouth means “not now.”', ['Turns away, or closes {p} mouth', 'Pushes food off the tray']))
         + sect('What helps', '', `<div class="fd-withfoot">${rowsCard([['clock', 'Try again another time', 'A new food can take 10–15 relaxed tries.'], ['hand', 'Let {o} touch and explore', 'Playing with food is part of learning.'], ['bowl', 'Eat together', '{S} {learn|learns} by watching you.']])}<p class="fd-foot"><b>${F('Split the job.')}</b> ${F('You choose what to offer. {S} {decide|decides} how much to eat.')}</p></div>`)
         + T.calls({ ped: 'refusing most foods for weeks, or fewer wet diapers.' }), 'expect'); },
+    // Nov 27 (last challenge pages): the same calm pattern as bottle refusal and refusing food.
+    x_spit: () => { const m = mo(), T = H().TPLB;
+      return page(head('drop', 'Feeding challenges', 'Spit-up is common, and usually fine', m >= 12 ? 'Spit-up this late is worth a mention at the next checkup.' : m < 5 ? 'It peaks around 4 months, and it’s usually gone by the first birthday.' : 'It’s past the peak, and it’s usually gone by the first birthday.'),
+        sect('See what it looks like', '', photoNotice('feeding/spit-up', '45%', 'A tablespoon or two looks like a lot once it spreads.', ['A little milk after most feeds', 'Comfortable, and still growing']))
+        + sect('What helps', '', rowsCard([['heart', 'Hold {o} upright after feeds', 'For 20–30 minutes.'], ['bottle', 'Smaller feeds, more often', 'A little less each time.'], ['hand', 'Stop when {s} {slow|slows} down', 'No need to finish.']]))
+        + callout('For sleep', 'Flat on {p} back, even with spit-up. No wedges.')
+        + T.calls({ ped: '{s} {spit|spits} up forcefully, {cry|cries} and {arch|arches} at most feeds, or {are|is} not gaining weight.', er: 'green or bloody vomit.' }), 'expect'); },
+    z_reaction: () => withPage('z_reaction', root => { asGroup(root); const c = root.querySelector('.care-calls'); const wrap = c && c.previousElementSibling && /When to call/.test(c.previousElementSibling.textContent) ? c.previousElementSibling : null;
+      if (c) { if (wrap) wrap.remove(); c.outerHTML = H().TPLB.calls({ ped: 'a few hives, or vomiting, after a new food. Call the same day.', now: 'trouble breathing, swelling of the lips or face, or hives all over.', nowLabel: 'Call 911' }); } }),
+    z_teeth: () => { const m = mo(), T = H().TPLB;
+      return page(head('tooth', 'Feeding challenges', 'Teething can make feeds short and fussy', 'Sore gums usually settle in a few days. Teething doesn’t cause a fever.'),
+        sect('See what it looks like', '', photoNotice('care/look-teething', '30%', 'Sore gums can make sucking uncomfortable.', ['Drooling and chewing on {p} hands', 'Pulling off partway through feeds']))
+        + sect('What helps', '', rowsCard([['snow', 'Chill a teether', 'Or a washcloth, to chew on.'], m >= 6 ? ['bowl', 'Serve chilled food', 'Cool yogurt or mashed fruit soothes gums.'] : ['hand', 'Rub {p} gums', 'With a clean finger, for a minute or two.'], ['clock', 'Try shorter feeds', 'More often, until {p} gums settle.']]))
+        + callout('Skip numbing gels and amber necklaces', 'Neither is safe for babies.')
+        + T.calls({ ped: 'refusing to drink' + fevTail() + '.', ...feverCall() }), 'expect'); },
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',
@@ -361,6 +386,7 @@
   window.changesRoute = function (r, ...a) { const q = String(r).split(':');
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'xa' && q[4] === 'feed' && window.__hub && !window.__fdIn) { window.__fdLast = r; return nbFeed(); }
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'xa' && /^prep/.test(q[4] || '') && window.__hub && !window.__fdIn && window.__fdx && window.__fdx.formulaFam && window.__fdx.formulaFam()) { window.__fdLast = r; return fmPage(); }
+    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'xa' && /^prep/.test(q[4] || '') && window.__hub && !window.__fdIn && window.__fdx && window.__fdx.isBreast && window.__fdx.isBreast() && window.__fdx.nurses && !window.__fdx.nurses()) { window.__fdLast = r; return bmPage(); }
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && NB[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = NB[q[3]](); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && G[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = G[q[3]](q[4]); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     return base.call(this, r, ...a); };
