@@ -172,6 +172,9 @@
   const photoNotice = (img, pos, cap, chips) => `<section class="fd-pn"><figure><img src="assets/${img}.jpg" alt="" loading="lazy" style="object-position:50% ${pos}"><figcaption>${F(cap)}</figcaption></figure><div>${chips.map(c => `<span>${F(c)}</span>`).join('')}</div></section>`;
   const numRows = (rows, foot) => `<section class="fd-list fd-numrows">${rows.map(([t, x], i) => `<div class="fd-list-r"><span class="fd-nr">${i + 1}</span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}${foot ? `<p class="fd-foot"><b>${F(foot[0])}</b> ${F(foot[1])}</p>` : ''}</section>`;
   const swapHelps = (root, rows) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === 'What helps'); if (!h) return; let n = h.nextElementSibling; while (n && !/^H2$/.test(n.tagName)) { const nx = n.nextElementSibling; n.remove(); n = nx; } h.insertAdjacentHTML('afterend', rowsCard(rows)); };
+  const hubPolish = (root, ren) => {
+    root.querySelectorAll('.fdt-tile').forEach(t => { const b = t.querySelector('b'), sm = t.querySelector('small'), r = b && ren[b.textContent.trim()]; if (r) { b.textContent = F(r[0]); if (sm) sm.textContent = F(r[1]); } else if (sm) sm.querySelectorAll('span').forEach(x => x.remove()); });
+    const rows = [...root.querySelectorAll('.fdt-row')]; if (rows.length) { const box = document.createElement('section'); box.className = 'fd-hubrows'; rows[0].parentNode.insertBefore(box, rows[0]); rows.forEach(r => box.appendChild(r)); } };
   const cardAfter = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); return h && h.nextElementSibling; };
   // Nov 27 (Yarden's mockup): formula families get one page, start to finish, instead of four steps. The type switch
   // changes only the making steps; storage and cleaning are the same for every type.
@@ -333,14 +336,14 @@
         const lead = root.querySelector('.hub-lead'); if (lead) lead.textContent = F('Find what you’re seeing, then the right next step.');
         const grid = root.querySelector('.fdt-grid'); if (grid) grid.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('What’s happening?')}</h2>`);
         const first = root.querySelector('.fdt-row'); if (first) first.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('Other common challenges')}</h2>`);
-        const more = root.querySelector('details.fdt-more'); if (more) { const rows = [...more.querySelectorAll('.fdt-row')]; rows.forEach(r => more.parentNode.insertBefore(r, more)); more.remove(); } });
+        const more = root.querySelector('details.fdt-more'); if (more) { const rows = [...more.querySelectorAll('.fdt-row')]; rows.forEach(r => more.parentNode.insertBefore(r, more)); more.remove(); }
+        hubPolish(root, { 'Spitting up': ['Spit-up', 'After feeds'], 'Gassy or fussy': ['Gas and fussing', 'Discomfort around feeds'], 'Pulling away or refusing': ['Pulling away', 'Feeds aren’t going smoothly'], 'Poop looks different': ['Poop changes', 'Color, texture or constipation'] }); });
       return withPage('x_tough', root => { asGroup(root); const ttl = root.querySelector('.dev-area-head h1, .dev-area-head h2, .hub-title'); if (ttl) ttl.textContent = F('Common mealtime worries, and what helps');
         const lead = root.querySelector('.hub-lead'); if (lead) lead.textContent = F('Find what you’re seeing, then the right next step.');
         const ren = { 'Gagging': ['Gagging or choking', 'Know the difference, and what to do'], 'Refusing food': ['Refusing food', 'Turning away, or eating less'], 'A rash after a new food': ['A rash after food', 'Spot a possible reaction'], 'Constipation': ['Constipation', 'When new foods change poop'] };
-        root.querySelectorAll('.fdt-tile').forEach(t => { const b = t.querySelector('b'), sm = t.querySelector('small, span:not(.fdt-ic)'), r = b && ren[b.textContent.trim()]; if (r) { b.textContent = F(r[0]); if (sm) sm.textContent = F(r[1]); } });
         const grid = root.querySelector('.fdt-grid'); if (grid) grid.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('What’s happening?')}</h2>`);
         const row = root.querySelector('.fdt-row'); if (row) row.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('Other common challenges')}</h2>`);
-        const calls = root.querySelector('.care-tpl.is-urgent'); if (calls) calls.outerHTML = `<div class="care-tpl is-urgent">${H().TPLB.calls({ ped: 'fewer wet diapers, or a fever over a day or 103°F.', er: 'green or bloody vomit.', now: 'trouble breathing, or a severe reaction.', nowLabel: 'Call 911' })}</div>`; }); },
+        hubPolish(root, ren); const calls = root.querySelector('.care-tpl.is-urgent'); if (calls) calls.outerHTML = `<div class="care-tpl is-urgent">${H().TPLB.calls({ ped: 'fewer wet diapers, or a fever over a day or 103°F.', er: 'green or bloody vomit.', now: 'trouble breathing, or a severe reaction.', nowLabel: 'Call 911' })}</div>`; }); },
     // Nov 27 (Yarden's mockups): bottle refusal and refusing food.
     x_nobottle: () => { const X = window.__fdx || {}; if (!(X.nurses && X.nurses()) || mo() >= 11) return window.changesRoute('chg:' + CAT + ':mock:x_nobottle'); const T = H().TPLB;
       return page(head('bottle', 'Feeding challenges', 'Won’t take a bottle? It often takes practice', 'Many babies who nurse need time to get used to a bottle. Keep it low-pressure.'),

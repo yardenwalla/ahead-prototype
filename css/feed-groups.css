@@ -444,3 +444,17 @@
 #main .fd-group .fd-times b{display:block;font-size:15px;color:#2b2733}#main .fd-group .fd-times small{display:block;font-size:13px;color:#5e5a66;margin-top:2px}
 #main .fd-group .fd-key{display:flex;align-items:center;gap:6px;font-size:13px;color:#5e5a66;margin:0 4px 14px}#main .fd-group .fd-key i{margin:0 0 0 8px}#main .fd-group .fd-key i:first-child{margin-left:0}
 #main .fd-group .dev-area-head.ss-head{background:#fbe4ec}
+/* Feeding challenges hubs: calmer tiles, one card of rows */
+#main .fd-group .fdt-tile{min-height:128px;padding:16px;gap:4px}
+#main .fd-group .fdt-tile .fdt-ic{width:40px;height:40px;border-radius:12px;background:#fff;margin-bottom:10px}
+#main .fd-group .fdt-tile .fdt-ic svg{width:24px;height:24px}
+#main .fd-group .fdt-tile b{font-size:16px;line-height:1.25}
+#main .fd-group .fdt-tile small{font-size:13px;line-height:1.35;color:#5e5a66}
+#main .fd-group .fd-hubrows{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:2px 14px;margin:0 0 16px}
+#main .fd-group .fd-hubrows .fdt-row{margin:0;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;padding:14px 0!important}
+#main .fd-group .fd-hubrows .fdt-row + .fdt-row{border-top:1px solid #f1ebe6!important}
+#main .fd-group .fd-hubrows .fdt-row:nth-child(5n+1) .fdt-ic{background:#e6f5ec}
+#main .fd-group .fd-hubrows .fdt-row:nth-child(5n+2) .fdt-ic{background:#e7effc}
+#main .fd-group .fd-hubrows .fdt-row:nth-child(5n+3) .fdt-ic{background:#fff3dc}
+#main .fd-group .fd-hubrows .fdt-row:nth-child(5n+4) .fdt-ic{background:#fdeee6}
+#main .fd-group .fd-hubrows .fdt-row:nth-child(5n+5) .fdt-ic{background:#fdeef2}
