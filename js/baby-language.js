@@ -478,8 +478,8 @@ const BABY_COPY_TEMPLATES = new Map([
     "How {does} {s} react?"
   ],
   [
-    "Gagging is normal while she learns. Keep offering soft lumps alongside foods she likes.",
-    "Gagging is normal while {s} {learns}. Keep offering soft lumps alongside foods {s} {likes}."
+    "Gagging is common while she learns. Keep offering soft lumps alongside foods she likes.",
+    "Gagging is common while {s} {learns}. Keep offering soft lumps alongside foods {s} {likes}."
   ],
   [
     "Go back to a slightly smoother texture for a week, then try again. If it keeps happening, mention it at her next checkup.",

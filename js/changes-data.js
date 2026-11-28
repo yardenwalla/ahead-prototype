@@ -1378,7 +1378,7 @@ window.AHEAD_CHANGES = {
      [
       [
        "Gags, then keeps going",
-       "Gagging is normal while she learns. Keep offering soft lumps alongside foods she likes.",
+       "Gagging is common while she learns. Keep offering soft lumps alongside foods she likes.",
        "Trouble breathing or an ineffective cough can mean choking, even if there’s some sound. Know infant choking first aid.",
        null
       ],

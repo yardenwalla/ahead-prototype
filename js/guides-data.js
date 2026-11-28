@@ -112,7 +112,7 @@ window.AHEAD_GUIDES = {
     ['Choose how you’ll start', 'Purées, soft finger foods or both. Begin with an iron-rich food.']
    ],
    know: [
-    ['Gagging is normal; choking isn’t', 'Choking means trouble breathing or a weak cough. Call 911.'],
+    ['Gagging is common; choking isn’t', 'Choking means trouble breathing or a weak cough. Call 911.'],
     ['Offer peanut and egg early', 'Once a few foods are going well. Ask first if Maya has severe eczema.', "openPage('chg:Feeding:allergy')", 'How to introduce allergens'],
     ['Milk stays the main food', 'Keep milk feeds as they are. Solids start as practice.']
    ],
