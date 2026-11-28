@@ -381,3 +381,15 @@
 #main .fd-group .fd-t3-ic{width:34px;height:34px;margin-bottom:12px;color:#9b4766}
 #main .fd-group .fd-tiles3 b{font-size:16px;margin-bottom:6px}
 #main .fd-group .fd-tiles3 small{font-size:13.5px;line-height:1.45}
+#main .fd-group .fd-pn{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:10px;margin:0 0 14px}
+#main .fd-group .fd-pn figure{position:relative;margin:0 0 10px;border-radius:14px;overflow:hidden;aspect-ratio:16/10}
+#main .fd-group .fd-pn img{width:100%;height:100%;object-fit:cover;display:block}
+#main .fd-group .fd-pn figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;background:linear-gradient(transparent,rgba(30,20,25,.62));color:#fff;font-size:14px;font-weight:600;line-height:1.35}
+#main .fd-group .fd-pn > div{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#main .fd-group .fd-pn > div span{background:#fbe4ec;border-radius:14px;padding:11px 12px;font-size:13.5px;font-weight:600;line-height:1.35;color:#2b2733}
+#main .fd-group .fd-nr{flex:none;width:30px;height:30px;border-radius:9px;background:#fbe4ec;color:#9b4766;font-weight:700;display:grid;place-items:center;font-size:15px}
+#main .fd-group .fd-numrows .fd-list-r{align-items:flex-start}
+#main .fd-group .fd-foot{margin:4px 0 0;padding:12px 4px 4px;border-top:1px solid #f1ebe6;font-size:14px;line-height:1.45;color:#3d3945}
+#main .fd-group .fd-withfoot{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:0 12px 10px;margin:0 0 14px}
+#main .fd-group .fd-withfoot .fd-list{border:0;background:none;margin:0;padding:0}
+#main .fd-group .fd-numrows .fd-list-r > span.fd-nr{display:flex!important;align-items:center;justify-content:center;width:30px;height:30px;line-height:1;padding:0;text-align:center;font-size:15px;font-weight:700;color:#9b4766;background:#fbe4ec;border-radius:9px}

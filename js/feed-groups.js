@@ -168,6 +168,8 @@
   const realMo = () => (window.__fdx && window.__fdx.realMo) ? window.__fdx.realMo() : mo();
   const feverCall = () => realMo() < 3 ? { right: 'a rectal temperature of 100.4°F or higher' } : {};
   const fevTail = () => { const m = realMo(); return m < 3 ? '' : ', or a fever that lasts more than a day or reaches ' + (m < 6 ? '101' : '103') + '°F'; };
+  const photoNotice = (img, pos, cap, chips) => `<section class="fd-pn"><figure><img src="assets/${img}.jpg" alt="" loading="lazy" style="object-position:50% ${pos}"><figcaption>${F(cap)}</figcaption></figure><div>${chips.map(c => `<span>${F(c)}</span>`).join('')}</div></section>`;
+  const numRows = (rows, foot) => `<section class="fd-list fd-numrows">${rows.map(([t, x], i) => `<div class="fd-list-r"><span class="fd-nr">${i + 1}</span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}${foot ? `<p class="fd-foot"><b>${F(foot[0])}</b> ${F(foot[1])}</p>` : ''}</section>`;
   const cardAfter = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); return h && h.nextElementSibling; };
   // Nov 27 (Yarden's mockup): formula families get one page, start to finish, instead of four steps. The type switch
   // changes only the making steps; storage and cleaning are the same for every type.
@@ -309,7 +311,7 @@
         + T.calls({ ped: 'you see either of these, or {s’s} gaining slowly.', now: 'trouble breathing, or swelling of the lips or face.', nowLabel: 'Call 911' }), 'expect'); },
     z_sick: () => { const T = H().TPLB, X = window.__fdx || {}, milk = X.isBreast && X.isBreast() ? (X.formulaFam && X.formulaFam() ? 'breast milk or formula' : 'breast milk') : 'formula';
       return page(head('thermo', 'Feeding challenges', 'When {s’s} sick, milk comes first', 'It’s okay if solids take a back seat for a little while.'),
-        sect('What matters most today', '', doCard([['Offer breast milk or formula more often, in smaller amounts.', 1]]))
+        sect('What matters most today', '', doCard([['Offer breast milk or formula more often, in smaller amounts.']]))
         + sect('Make feeds a little easier', '', rowsCard([['drop', 'Clear a stuffy nose', 'Saline drops, then gentle suction, before feeds.'], ['heart', 'Watch energy and diapers', 'Can {s} stay awake to feed? Are wet diapers still happening?']]))
         + T.calls({ ped: realMo() < 3 ? 'fewer wet diapers, or vomiting that keeps happening.' : 'fewer wet diapers, vomiting that keeps happening, or a fever over a day or ' + (realMo() < 6 ? '101' : '103') + '°F.', ...feverCall(), now: 'trouble breathing, or {s’s} very hard to wake.', nowLabel: 'Call 911' }), 'expect'); },
     x_tough: () => { const X = window.__fdx || {}; if (!(X.stg && X.stg() >= 3)) return window.changesRoute('chg:' + CAT + ':mock:x_tough');
@@ -320,6 +322,17 @@
         const grid = root.querySelector('.fdt-grid'); if (grid) grid.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('What’s happening?')}</h2>`);
         const row = root.querySelector('.fdt-row'); if (row) row.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('Other common challenges')}</h2>`);
         const calls = root.querySelector('.care-tpl.is-urgent'); if (calls) calls.outerHTML = `<div class="care-tpl is-urgent">${H().TPLB.calls({ ped: 'fewer wet diapers, or a fever over a day or 103°F.', er: 'green or bloody vomit.', now: 'trouble breathing, or a severe reaction.', nowLabel: 'Call 911' })}</div>`; }); },
+    // Nov 27 (Yarden's mockups): bottle refusal and refusing food.
+    x_nobottle: () => { const X = window.__fdx || {}; if (!(X.nurses && X.nurses()) || mo() >= 11) return window.changesRoute('chg:' + CAT + ':mock:x_nobottle'); const T = H().TPLB;
+      return page(head('bottle', 'Feeding challenges', 'Won’t take a bottle? It often takes practice', 'Many babies who nurse need time to get used to a bottle. Keep it low-pressure.'),
+        sect('What you might notice', '', photoNotice('feeding/nobottle-other', '35%', 'A calm moment with another caregiver can help.', ['Pushes the nipple out, or cries', 'Turns away from the bottle']))
+        + sect('What to try', '', numRows([['Have someone else offer it', 'Ideally with the nursing parent out of the room.'], ['Choose a calm moment', 'Before {s’s} very hungry. Start with a small amount.'], ['Keep the pace gentle', 'Try a slow-flow nipple. Let {o} pause or stop.']], ['If {s} {resist|resists}:', 'Stop, and try again tomorrow. A few minutes a day is plenty.']))
+        + T.calls({ ped: '{s} {refuse|refuses} all feeds, or {have|has} fewer wet diapers.' }), 'expect'); },
+    z_refuse: () => { const T = H().TPLB;
+      return page(head('plate', 'Feeding challenges', 'Refusing food is common, and it passes', 'Some days {s}’ll eat a lot. Other days, almost nothing.'),
+        sect('See what {s’s} telling you', '', photoNotice('feeding/refuse-turn', '40%', 'Turning away or closing {p} mouth means “not now.”', ['Turns away, or closes {p} mouth', 'Pushes food off the tray']))
+        + sect('What helps', '', `<div class="fd-withfoot">${rowsCard([['clock', 'Try again another time', 'A new food can take 10–15 relaxed tries.'], ['hand', 'Let {o} touch and explore', 'Playing with food is part of learning.'], ['bowl', 'Eat together', '{S} {learn|learns} by watching you.']])}<p class="fd-foot"><b>${F('Split the job.')}</b> ${F('You choose what to offer. {S} {decide|decides} how much to eat.')}</p></div>`)
+        + T.calls({ ped: 'refusing most foods for weeks, or fewer wet diapers.' }), 'expect'); },
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',
