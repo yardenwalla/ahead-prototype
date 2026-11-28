@@ -458,3 +458,20 @@
 #main .fd-group .fd-hubrows .fdt-row:nth-child(5n+3) .fdt-ic{background:#fff3dc}
 #main .fd-group .fd-hubrows .fdt-row:nth-child(5n+4) .fdt-ic{background:#fdeee6}
 #main .fd-group .fd-hubrows .fdt-row:nth-child(5n+5) .fdt-ic{background:#fdeef2}
+#main .fd-group .fd-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+#main .fd-group .fd-chips button{all:unset;box-sizing:border-box;cursor:pointer;border-radius:999px;padding:10px 14px;font-size:14.5px;font-weight:600;color:#2b2733;background:#fbe4ec}
+#main .fd-group .fd-chips.is-sun button{background:#fdf0dc}#main .fd-group .fd-chips.is-lav button{background:#efedf8}
+#main .fd-group .fd-chips span{color:#9b4766;margin-left:2px}
+#main .fd-group .fd-cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 16px}
+#main .fd-group .fd-cols3 section{border-radius:18px;padding:10px 8px;display:flex;flex-direction:column;gap:6px}
+#main .fd-group .fd-cols3 .is-pink{background:#fbe4ec}#main .fd-group .fd-cols3 .is-sun{background:#fdf0dc}#main .fd-group .fd-cols3 .is-lav{background:#efedf8}
+#main .fd-group .fd-cols3 em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9b4766;text-align:center;padding:2px 0 4px}
+#main .fd-group .fd-cols3 button{all:unset;box-sizing:border-box;cursor:pointer;background:#fffdfa;border-radius:12px;padding:12px 8px;min-height:56px;display:flex;align-items:center}
+#main .fd-group .fd-cols3 b{font-size:13.5px;line-height:1.25;color:#2b2733}
+#main .fd-group .fd-cols3.is-two{grid-template-columns:1fr 1fr;gap:10px}
+#main .fd-group .fd-cols3.is-two section{padding:12px 10px;gap:8px}
+#main .fd-group .fd-cols3.is-two em{font-size:11px;padding:2px 0 2px}
+#main .fd-group .fd-cols3.is-two button{padding:12px;min-height:64px}
+#main .fd-group .fd-cols3.is-two b{display:block;font-size:15px}
+#main .fd-group .fd-cols3.is-two small{display:block;font-size:12.5px;color:#5e5a66;margin-top:2px;line-height:1.3}
+#main .fd-group .fd-list-r .hub-chev{margin-left:auto;align-self:center;color:#b9a9b0;font-size:20px;padding-left:8px}

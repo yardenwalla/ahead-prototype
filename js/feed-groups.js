@@ -337,6 +337,22 @@
         const grid = root.querySelector('.fdt-grid'); if (grid) grid.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('What’s happening?')}</h2>`);
         const first = root.querySelector('.fdt-row'); if (first) first.insertAdjacentHTML('beforebegin', `<h2 class="hub-h2">${F('Other common challenges')}</h2>`);
         const more = root.querySelector('details.fdt-more'); if (more) { const rows = [...more.querySelectorAll('.fdt-row')]; rows.forEach(r => more.parentNode.insertBefore(r, more)); more.remove(); }
+        if (window.__hubV) { const X2 = window.__fdx || {}, nurse = X2.nurses && X2.nurses(), go = id => id.includes(':') ? `openPage('${id}')` : `openPage('chg:${CAT}:mock:${id}')`;
+          const groups = [['During feeds', 'pink', [['x_refuse', 'Pulling away', 'Stops mid-feed'], nurse && ['x_nobottle', 'Bottle refusal', 'Won’t take it'], nurse && ['x_hurt', 'Feeding hurts', 'Painful latch']].filter(Boolean)],
+            ['Tummy and diapers', 'sun', [['x_spit', 'Spit-up', 'Milk comes back'], ['x_gas', 'Gas or fussing', 'Squirming, crying'], ['chg:Daily rhythm:d:look:1:poop', 'Poop changes', 'Color, texture']]],
+            ['Other worries', 'lav', [['x_gain', 'Weight gain', 'Growth pattern'], ['chg:Sleep:d:crying', 'Crying a lot', 'Hard to settle'], ['x_allergy', 'Milk allergy?', 'Signs to check']]]];
+          if (window.__hubV === 'two') { const ICON = { x_gain: 'steth', 'chg:Sleep:d:crying': 'moon', x_allergy: 'star' }, SUB = { x_gain: 'What helps, and what gets checked', 'chg:Sleep:d:crying': 'What helps, and when it eases', x_allergy: 'Blood in poop, a rash, or vomiting' };
+            const two = `<div class="fd-cols3 is-two">${groups.slice(0, 2).map(([g, tone, xs]) => `<section class="is-${tone}"><em>${F(g)}</em>${xs.map(([id, t, sub]) => `<button onclick="${go(id)}"><span><b>${F(t)}</b><small>${F(sub)}</small></span></button>`).join('')}</section>`).join('')}</div>`;
+            const rows = `<h2 class="hub-h2">${F('Other worries')}</h2>` + rowsCard(groups[2][2].map(([id, t]) => [ICON[id], t, SUB[id]])).replace(/<div class="fd-list-r">/g, () => '<div class="fd-list-r">');
+            const grid = root.querySelector('.fdt-grid'); [...root.querySelectorAll('h2')].filter(h => /What’s happening|Other common/.test(h.textContent)).forEach(h => h.remove());
+            root.querySelectorAll('.fdt-row').forEach(r => r.remove()); if (grid) grid.outerHTML = two + rows;
+            const box = root.querySelectorAll('.fd-list'); const last = box[box.length - 1]; if (last) [...last.querySelectorAll('.fd-list-r')].forEach((r, k) => { const id = groups[2][2][k][0]; r.setAttribute('onclick', go(id)); r.style.cursor = 'pointer'; r.insertAdjacentHTML('beforeend', '<span class="hub-chev" aria-hidden="true">›</span>'); });
+            const ttl = root.querySelector('.dev-area-head h1'); if (ttl) ttl.textContent = F('What are you noticing?'); return; }
+          const html = window.__hubV === 'chips' ? groups.map(([g, tone, xs]) => `<h2 class="hub-h2">${F(g)}</h2><div class="fd-chips is-${tone}">${xs.map(([id, t]) => `<button onclick="${go(id)}">${F(t)} <span>›</span></button>`).join('')}</div>`).join('')
+            : `<div class="fd-cols3">${groups.map(([g, tone, xs]) => `<section class="is-${tone}"><em>${F(g)}</em>${xs.map(([id, t]) => `<button onclick="${go(id)}"><b>${F(t)}</b></button>`).join('')}</section>`).join('')}</div>`;
+          const grid = root.querySelector('.fdt-grid'); const hs = [...root.querySelectorAll('h2')].filter(h => /What’s happening|Other common/.test(h.textContent)); hs.forEach(h => h.remove());
+          root.querySelectorAll('.fdt-row').forEach(r => r.remove()); if (grid) grid.outerHTML = html;
+          const ttl = root.querySelector('.dev-area-head h1'); if (ttl) ttl.textContent = F('What are you noticing?'); return; }
         hubPolish(root, { 'Spitting up': ['Spit-up', 'After feeds'], 'Gassy or fussy': ['Gas and fussing', 'Discomfort around feeds'], 'Pulling away or refusing': ['Pulling away', 'Feeds aren’t going smoothly'], 'Poop looks different': ['Poop changes', 'Color, texture or constipation'] }); });
       return withPage('x_tough', root => { asGroup(root); const ttl = root.querySelector('.dev-area-head h1, .dev-area-head h2, .hub-title'); if (ttl) ttl.textContent = F('Common mealtime worries, and what helps');
         const lead = root.querySelector('.hub-lead'); if (lead) lead.textContent = F('Find what you’re seeing, then the right next step.');
